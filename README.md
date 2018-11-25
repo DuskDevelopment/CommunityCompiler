@@ -6,6 +6,11 @@ The Dusk original Community Compiler project from the community of thebennybox's
 
 ## Building on Unix systems
 
+### Pre-requisites
+
+ -  `cmake` installed in path
+ -  C compiler installed
+
 ```
 mkdir build && cd build
 cmake .. && make
@@ -15,6 +20,11 @@ The command `cmake ..` generates build files in the current directory, based on 
 `make` builds the project, and creates the binary `CommunityCompiler`.
 
 ## Building on Windows
+
+### Pre-requisites
+
+ -  `cmake` installed in the path
+ -  Visual Studio 2017 installed
 
 ```
 mkdir build

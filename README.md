@@ -12,8 +12,10 @@ The Dusk original Community Compiler project from the community of thebennybox's
  -  C compiler installed
 
 ```
-mkdir build && cd build
-cmake .. && make
+mkdir build
+cd build
+cmake ..
+make
 ```
 
 The command `cmake ..` generates build files in the current directory, based on the CMakeLists.txt file in the parent directory.

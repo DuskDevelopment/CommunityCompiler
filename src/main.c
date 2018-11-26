@@ -20,8 +20,7 @@ print_version(void) {
     printf("This is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n");
 }
 
-static int
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
 
     if (argc == 1) {
         print_help();
@@ -33,7 +32,7 @@ main(int argc, char **argv) {
 
     char *outputFileName = "a.out";
 
-    for (int i = 1; i < argc; i++) {
+    for(int i = 1; i < argc; i++) {
         if (argv[i][0] == '-') {
             if (StringCompare(argv[i], "--help")) {
                 print_help();

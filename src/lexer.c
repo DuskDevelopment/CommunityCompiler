@@ -7,7 +7,7 @@
 #include "stretchy_buffers.h"
 #include "string.h"
 
-#define arrayCount(value) (int)(sizeof(value)/sizeof(value[0]))
+#define arrayCount(value) (int)(sizeof(value)/sizeof((value)[0]))
 
 char *tokenValues[] = {"fn", "(", ")", "{", "}", "return", ";"};
 

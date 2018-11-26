@@ -1,16 +1,11 @@
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include <string>
-#include <vector>
-
-#include "duskc.hpp"
-
-using namespace std; // Ugh
+#include "duskc.h"
 
 void help() {
-    printf("Usage: %s [options] file...\n", programName.c_str());
+    printf("Usage: %s [options] file...\n", programName);
     printf("Options:\n");
     printf("  --help        Display this information.\n");
     printf("  --version     Display compiler version information.\n");
@@ -25,8 +20,8 @@ void version() {
 }
 
 int main(int argc, char **argv) {
-    programName = string(argv[0]).substr(string(argv[0]).find_last_of("/")+1);
-    vector<char*> inputFiles;
+    programName = strrchr(argv[0], '/')+1;
+    list *inputFiles = list_new();
     char *outputFile = "a.out";
     for(int i = 1; i < argc; i++) {
         if(argv[i][0] == '-') { // Option, maybe
@@ -41,20 +36,20 @@ int main(int argc, char **argv) {
                 return 0;
             } else if(strcmp("-o", argv[i]) == 0) {
                 if(i == argc-1)
-                    fprintf(stderr, "%s: warning: missing filename after ‘-o‘; ignored\n", programName.c_str());
+                    fprintf(stderr, "%s: warning: missing filename after ‘-o‘; ignored\n", programName);
                 else {
                     outputFile = argv[i+1];
                     i++;
                 }
             } else {
-                fprintf(stderr, "%s: warning: invalid option ‘%s‘; ignored\n", programName.c_str(), argv[i]);
+                fprintf(stderr, "%s: warning: invalid option ‘%s‘; ignored\n", programName, argv[i]);
             }
         } else {
-            inputFiles.push_back(argv[i]);
+            list_add(inputFiles, argv[i]);
         }
     }
-    if(inputFiles.size() == 0) {
-        fprintf(stderr, "%s: fatal error: no input files\n", programName.c_str());
+    if(!list_size(inputFiles)) {
+        fprintf(stderr, "%s: fatal error: no input files\n", programName);
         return 1;
     }
     return 0;

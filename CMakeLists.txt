@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
-project(CommunityCompiler)
+project(CommunityCompiler C)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_STANDARD 99)
 
-add_executable(CommunityCompiler src/main.cpp src/globalStorage.cpp)
+add_executable(CommunityCompiler src/main.c src/globalStorage.c src/list.c)

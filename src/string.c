@@ -1,80 +1,69 @@
-static int
-StringLength(char *Input)
-{
-    int Count = 0;
-    while(Input[Count])
-    {
-        Count++;
+#include "string.h"
+
+#include <stdlib.h>
+
+int stringLength(char *input) {
+    int count = 0;
+    while(input[count]) {
+        count++;
     }
-    return Count;
+
+    return count;
 }
 
-// true if equal
-// must be null terminated
-static bool
-StringCompare(char *String1, char* String2)
-{
-    bool Result = (String1 == String2);
+bool stringCompare(char *string1, char* string2) {
+    bool result = (string1 == string2);
 
-    if(String1 && String2)
-    {
-        while(*String1 && *String2 && (*String1 == *String2))
-        {
-            ++String1;
-            ++String2;
+    if (string1 && string2) {
+        while(*string1 && *string2 && (*string1 == *string2)) {
+            ++string1;
+            ++string2;
         }
 
-        Result = ((*String1 == 0) && (*String2 == 0));
+        result = ((*string1 == 0) && (*string2 == 0));
     }
 
-    return Result;
+    return result;
 }
 
-static bool
-StringCompareWithLength(char *String1, char *String2, int Length)
-{
-    bool Result = (String1 == String2);
-    int Cursor = 0;
-    while(Cursor != Length)
-    {
-        Result = (String1[Cursor] == String2[Cursor]);
-        if(!Result)
+bool stringCompareWithLength(char *string1, char *string2, int length) {
+    bool result = (string1 == string2);
+    int cursor = 0;
+    while(cursor != length) {
+        result = (string1[cursor] == string2[cursor]);
+        if (!result) {
             break;
-        Cursor++;
+        }
+        cursor++;
     }
 
-    return Result;
+    return result;
 }
 
-static char*
-StringFindNext(char *Input, char *Search, int Count)
+char *stringFindNext(char *input, char *search, int count)
 {
-    char *Result = Input;
+    char *result = input;
 
-    while(*Result)
-    {
-        for(int i = 0; i < Count; i++)
-        {
-            if(*Result == Search[i])
-                return Result;
+    while(*result) {
+        for(int i = 0; i < count; i++) {
+            if (*result == search[i]) {
+                return result;
+            }
         }
 
-        Result++;
+        result++;
     }
 
-    return Result;
+    return result;
 }
 
-static char*
-StringSubstring(char *Input, int Count)
-{
-    char *Result = malloc(sizeof(char) * Count + 1);
-    for(int i = 0; i < Count; i++)
-    {
-        Result[i] = Input[i];
+char *stringSubstring(char *input, int count) {
+    char *result = malloc(sizeof(char) * count + 1);
+    for(int i = 0; i < count; i++) {
+        result[i] = input[i];
     }
 
-    Result[Count] = 0;
+    result[count] = 0;
 
-    return Result;
+    return result;
 }

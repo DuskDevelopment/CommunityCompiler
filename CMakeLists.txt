@@ -3,4 +3,4 @@ project(duskc C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(duskc src/main.c)
+add_executable(duskc src/main.c src/vector.c src/string.c src/lexer.c)

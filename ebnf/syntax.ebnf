@@ -1,0 +1,20 @@
+(* Dusk EBNF by Rdrpenguin *)
+
+alphachar = ? all upper- and lower-case letters ?
+numchar = ? all numbers ?
+alphanum = alphachar | numchar
+whitespace = ? all whitespace characters ?
+
+identifier = alphachar, {alphanum}
+
+expression = ? magic, WIP ?
+
+vardecl = ("var" | "let"), whitespace, {whitespace}, identifier, {whitespace}, [":", {whitespace}, identifier, {whitespace}], ["=", {whitespace}, expression, {whitespace}] (* We'll let semantics get some of the tricky cases here *)
+
+statement = (expression | vardecl), {whitespace}, ";"
+
+code block = "{", {whitespace}, {statement, {whitespace}}, [expression, {whitespace}], "}"
+
+function = "fn", whitespace, {whitespace}, identifier, {whitespace}, "(", {whitespace}, identifier, whitespace, {whitespace}, identifier, {whitespace}, {",", {whitespace}, identifier, whitespace, {whitespace}, identifier, {whitespace}}, ")", {whitespace}, [":", {whitespace}, identifier, {whitespace}], code block
+
+grammar = {(statement | function), {whitespace}}

@@ -19,7 +19,7 @@ make
 ```
 
 The command `cmake ..` generates build files in the current directory, based on the CMakeLists.txt file in the parent directory.
-`make` builds the project, and creates the binary `CommunityCompiler`.
+`make` builds the project, and creates the binary `duskc`.
 
 ## Building on Windows
 

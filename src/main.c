@@ -52,5 +52,4 @@ int main(int argc, char **argv) {
         fprintf(stderr, "%s: fatal error: no input files\n", programName);
         return 1;
     }
-    return 0;
 }

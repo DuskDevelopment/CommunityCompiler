@@ -1,6 +1,7 @@
-#include <stdio.h>
+#include "lexer.c"
 
-int main() {
-    printf("Hello, World!\n");
+int main(int argc, char **argv)
+{
+    lex(argv[1]);
     return 0;
 }

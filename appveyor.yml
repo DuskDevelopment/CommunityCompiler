@@ -37,7 +37,7 @@ before_build:
     cmake --version
     cmake .. -G %generator%
 build:
-  project: c:\CommunityCompiler\build\CommunityCompiler.sln
+  project: c:\CommunityCompiler\build\duskc.sln
   verbosity: minimal
   parallel: true
 only_commits:

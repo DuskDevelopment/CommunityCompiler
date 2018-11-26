@@ -7,7 +7,7 @@ list *list_new() {
     return result;
 }
 
-void list_add(list *theList, void *data) {
+void list_add(list *theList /* Anybody got a better variable name? */, void *data) {
     list *curList = theList;
     while(curList->next) curList = curList->next;
     curList->data = data;

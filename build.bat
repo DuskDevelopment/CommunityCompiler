@@ -1,6 +1,5 @@
 @echo off
 
-@echo off
 if not defined DEV_ENV_DIR (
     echo Setting up vcvarsall.bat
     call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" x64

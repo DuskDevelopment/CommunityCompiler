@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
     list *inputFiles = list_new();
     char *outputFile = "a.out";
     for(int i = 1; i < argc; i++) {
-        if(argv[i][0] == '-') { // Option, maybe
+        if(argv[i][0] == '-') { // Option, or invalid
             if(strcmp("--help", argv[i]) == 0) {
                 help();
                 return 0;

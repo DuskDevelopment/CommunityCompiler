@@ -1,17 +1,12 @@
-typedef struct vector
-{
-    int ElementSize;
-    void **Elements;
-    int MaxSize;
-    int size;
-} vector;
+#include "vector.h"
 
-static void
-PushVector(vector *Dest, void *Value)
+#include <stdlib.h>
+
+void pushVector(vector *dest, void *value)
 {
-    if(Dest->size + 1 <= Dest->MaxSize)
+    if(dest->size + 1 <= dest->maxSize)
     {
-        Dest->Elements[Dest->size] = Value;
-        Dest->size+=1;
+        dest->elements[dest->size] = value;
+        dest->size+=1;
     }
 }

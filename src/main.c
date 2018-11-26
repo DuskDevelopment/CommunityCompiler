@@ -60,8 +60,7 @@ main(int argc, char **argv) {
         return 1;
     }
 
-    for(int i = 0; i < inputFiles.size; i++)
-    {
+    for(int i = 0; i < inputFiles.size; i++) {
         char *inputFile = (char *)inputFiles.Elements[i];
         lex(inputFile);
     }

@@ -11,5 +11,5 @@ IF NOT EXIST "build" mkdir "build"
 
 echo starting build
 pushd build
-cl -nologo -MDd -Od -Zi -Fedusk.exe ..\src\main.c
+cl -nologo -MDd -Od -Zi -Feduskc.exe ..\src\main.c
 popd

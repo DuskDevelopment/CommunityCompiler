@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 #include "string.c"
-#include "vector.c"
 
 #define ArrayCount(value) (int)(sizeof(value)/sizeof(value[0]))
 
@@ -46,7 +45,7 @@ lex(char *FileName)
     fclose(InputFile);
     InputBuffer[InputFileSize] = 0;
 
-    Vector TokenVector = {0};
+    vector TokenVector = {0};
     TokenVector.ElementSize = sizeof(Token);
     TokenVector.MaxSize = 20;
     TokenVector.Elements = malloc(sizeof(TokenVector.ElementSize) * TokenVector.MaxSize);
@@ -91,7 +90,7 @@ lex(char *FileName)
             InputBuffer+=TokenLength;
     }
 
-    for(int i = 0; i < TokenVector.Location; i++)
+    for(int i = 0; i < TokenVector.size; i++)
     {
         Token *CurrentToken = TokenVector.Elements[i];
         printf("type: %d, value: %s\n", CurrentToken->TokenType, CurrentToken->Value);

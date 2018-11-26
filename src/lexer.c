@@ -4,14 +4,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "string.c"
+#include "string.h"
+#include "vector.h"
 
-#define ArrayCount(value) (int)(sizeof(value)/sizeof(value[0]))
+#define arrayCount(value) (int)(sizeof(value)/sizeof(value[0]))
 
-char *TokenValues[] = {"fn", "(", ")", "{", "}", "return", ";"};
+char *tokenValues[] = {"fn", "(", ")", "{", "}", "return", ";"};
 
-enum TOKEN_TYPE
-{
+enum TOKEN_TYPE {
     TOKEN_IDENTIFIER,
     TOKEN_CONSTANT,
     TOKEN_FUNCTION,
@@ -23,77 +23,73 @@ enum TOKEN_TYPE
     TOKEN_SEMICOLON,
 };
 
-typedef struct Token
-{
-    int TokenType;
-    char *Value;
-} Token;
+typedef struct token {
+    int tokenType;
+    char *value;
+} token;
 
-static void
-lex(char *FileName)
-{  
-    FILE *InputFile;
-    long InputFileSize;
-    char *InputBuffer;
+void lex(char *fileName) {
+    FILE *inputFile;
+    long inputFileSize;
+    char *inputBuffer;
 
-    InputFile = fopen(FileName, "rb");
-    fseek(InputFile, 0, SEEK_END);
-    InputFileSize = ftell(InputFile);
-    rewind(InputFile);
+    inputFile = fopen(fileName, "rb");
+    fseek(inputFile, 0, SEEK_END);
+    inputFileSize = ftell(inputFile);
+    rewind(inputFile);
 
-    InputBuffer = (char *)malloc(InputFileSize * sizeof(char) + 1);
-    fread(InputBuffer, InputFileSize, 1, InputFile);
-    fclose(InputFile);
-    InputBuffer[InputFileSize] = 0;
+    inputBuffer = (char *)malloc(inputFileSize * sizeof(char) + 1);
+    fread(inputBuffer, inputFileSize, 1, inputFile);
+    fclose(inputFile);
+    inputBuffer[inputFileSize] = 0;
 
-    vector TokenVector = {0};
-    TokenVector.ElementSize = sizeof(Token);
-    TokenVector.MaxSize = 20;
-    TokenVector.Elements = malloc(sizeof(TokenVector.ElementSize) * TokenVector.MaxSize);
+    vector tokenVector = {0};
+    tokenVector.elementSize = sizeof(token);
+    tokenVector.maxSize = 20;
+    tokenVector.elements = malloc(sizeof(tokenVector.elementSize) * tokenVector.maxSize);
 
-    while(*InputBuffer)
-    {
-        if(*InputBuffer == ' ' || *InputBuffer == '\n' || *InputBuffer == '\r' || *InputBuffer == '\t')
-        {
-            InputBuffer++;
+    while(*inputBuffer) {
+        if (*inputBuffer == ' ' || *inputBuffer == '\n' || *inputBuffer == '\r' || *inputBuffer == '\t') {
+            inputBuffer++;
             continue;
         }
 
-        int TokenLength = StringFindNext(InputBuffer, " \t\n\r(){};", 9) - InputBuffer;
-        if(!TokenLength)
-            TokenLength = 1;
+        int tokenLength = stringFindNext(inputBuffer, " \t\n\r(){};", 9) - inputBuffer;
+        if (!tokenLength) {
+            tokenLength = 1;
+        }
 
-        char *TokenValueSubstring = StringSubstring(InputBuffer, TokenLength);
+        char *tokenValueSubstring = stringSubstring(inputBuffer, tokenLength);
 
         // printf("%d\n", TokenLength);
-        Token *NewToken = malloc(sizeof(Token));
-        NewToken->TokenType = TOKEN_IDENTIFIER;
-        NewToken->Value = TokenValueSubstring;
+        token *newToken = malloc(sizeof(token));
+        newToken->tokenType = TOKEN_IDENTIFIER;
+        newToken->value = tokenValueSubstring;
 
         bool matched = false;
-        for(int i = 0; i < ArrayCount(TokenValues); i++)
-        {
-            if(StringCompare(TokenValueSubstring, TokenValues[i]))
-            {
+        for(int i = 0; i < arrayCount(tokenValues); i++) {
+            if (stringCompare(tokenValueSubstring, tokenValues[i])) {
                 matched = true;
-                NewToken->TokenType = i+2;
+                newToken->tokenType = i+2;
             }
         }
 
-        if(!matched)
-            if(!isalpha(TokenValueSubstring[0]))
-                NewToken->TokenType = TOKEN_CONSTANT;
+        if (!matched) {
+            if (!isalpha(tokenValueSubstring[0])) {
+                newToken->tokenType = TOKEN_CONSTANT;
+            }
+        }
 
-        PushVector(&TokenVector, NewToken);
+        pushVector(&tokenVector, newToken);
         // printf("type: %d, value: %s\n", NewToken->TokenType, NewToken->Value);
 
-        if(TokenLength)
-            InputBuffer+=TokenLength;
+        if(tokenLength)
+            inputBuffer+=tokenLength;
     }
 
-    for(int i = 0; i < TokenVector.size; i++)
+    for(int i = 0; i < tokenVector.size; i++)
     {
-        Token *CurrentToken = TokenVector.Elements[i];
-        printf("type: %d, value: %s\n", CurrentToken->TokenType, CurrentToken->Value);
+        token *currentToken = tokenVector.elements[i];
+        printf("type: %d, value: %s\n", currentToken->tokenType, currentToken->value);
     }
 }

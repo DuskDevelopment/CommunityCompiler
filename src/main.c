@@ -1,6 +1,8 @@
-#include "vector.c"
-#include "lexer.c"
+#include "vector.h"
+#include "lexer.h"
+#include "string.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 
 static void
@@ -27,20 +29,20 @@ int main(int argc, char **argv) {
     }
 
     vector inputFiles = {0};
-    inputFiles.MaxSize = 20;
-    inputFiles.Elements = malloc(inputFiles.MaxSize * sizeof(char **));
+    inputFiles.maxSize = 20;
+    inputFiles.elements = malloc(inputFiles.maxSize * sizeof(char **));
 
     char *outputFileName = "a.out";
 
     for(int i = 1; i < argc; i++) {
         if (argv[i][0] == '-') {
-            if (StringCompare(argv[i], "--help")) {
+            if (stringCompare(argv[i], "--help")) {
                 print_help();
-            } else if (StringCompare(argv[i], "--version")) {
+            } else if (stringCompare(argv[i], "--version")) {
                 print_version();
-            } else if (StringCompare(argv[i], "--dumpversion")) {
+            } else if (stringCompare(argv[i], "--dumpversion")) {
                 print_version();
-            } else if (StringCompare(argv[i], "-o")) {
+            } else if (stringCompare(argv[i], "-o")) {
                 if (i == argc-1) {
                     printf("No output file specified with the -o flag. Ignoring\n");
                 } else {
@@ -50,7 +52,7 @@ int main(int argc, char **argv) {
                 printf("Invalid option specified. Ignoring.\n");
             }
         } else {
-            PushVector(&inputFiles, argv[i]);
+            pushVector(&inputFiles, argv[i]);
         }
     }
 
@@ -60,7 +62,7 @@ int main(int argc, char **argv) {
     }
 
     for(int i = 0; i < inputFiles.size; i++) {
-        char *inputFile = (char *)inputFiles.Elements[i];
+        char *inputFile = ((char **)inputFiles.elements)[i];
         lex(inputFile);
     }
 

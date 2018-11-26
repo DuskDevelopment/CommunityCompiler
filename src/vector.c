@@ -1,17 +1,17 @@
-typedef struct Vector
+typedef struct vector
 {
     int ElementSize;
     void **Elements;
     int MaxSize;
-    int Location;
-} Vector;
+    int size;
+} vector;
 
 static void
-PushVector(Vector *Dest, void *Value)
+PushVector(vector *Dest, void *Value)
 {
-    if(Dest->Location + 1 <= Dest->MaxSize)
+    if(Dest->size + 1 <= Dest->MaxSize)
     {
-        Dest->Elements[Dest->Location] = Value;
-        Dest->Location+=1;
+        Dest->Elements[Dest->size] = Value;
+        Dest->size+=1;
     }
 }

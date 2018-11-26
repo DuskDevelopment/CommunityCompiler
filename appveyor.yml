@@ -36,6 +36,7 @@ before_build:
     cd build
     cmake --version
     cmake .. -G %generator%
+    ls
 build:
   project: c:\CommunityCompiler\build\CommunityCompiler.sln
   verbosity: minimal

@@ -16,6 +16,10 @@ typedef struct ast_vardecl {
     ast_expression value;
 } ast_vardecl;
 
+typedef struct ast_return {
+    ast_expression value;
+} ast_return;
+
 typedef struct ast_statement {
     union {
         ast_expression expression;

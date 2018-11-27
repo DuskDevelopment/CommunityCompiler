@@ -1,9 +1,7 @@
-#include "string.h"
-
 #include "ast.h"
-#include "lexer.h"
 #include "parser.h"
 #include "stretchy_buffers.h"
+#include "string.h"
 
 void parse(Token *tokens) {
 

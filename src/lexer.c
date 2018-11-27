@@ -66,7 +66,7 @@ static Token *lexSource(char *inputBuffer) {
                 literal[length] = '\0';
 
                 token.tokenType = TOKEN_INTEGER_LITERAL;
-                token.literal = literal;
+                token.identifier = literal;
                 break;
             }
             case 'a':
@@ -205,5 +205,9 @@ Token *lex(char *fileName) {
     fclose(inputFile);
     inputBuffer[inputFileSize] = 0;
 
-    return lexSource(inputBuffer);
+    Token *tokens = lexSource(inputBuffer);
+
+    free(inputBuffer);
+
+    return tokens;
 }

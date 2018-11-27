@@ -1,6 +1,6 @@
-#include "vector.h"
 #include "lexer.h"
 #include "parser.h"
+#include "stretchy_buffers.h"
 #include "string.h"
 
 #include <stdlib.h>
@@ -29,13 +29,10 @@ int main(int argc, char **argv) {
         print_help();
     }
 
-    vector inputFiles = {0};
-    inputFiles.maxSize = 20;
-    inputFiles.elements = malloc(inputFiles.maxSize * sizeof(char **));
-
+    char **inputFiles = NULL;
     char *outputFileName = "a.out";
 
-    for(int i = 1; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
         if (argv[i][0] == '-') {
             if (stringCompare(argv[i], "--help")) {
                 print_help();
@@ -44,7 +41,7 @@ int main(int argc, char **argv) {
             } else if (stringCompare(argv[i], "--dumpversion")) {
                 print_version();
             } else if (stringCompare(argv[i], "-o")) {
-                if (i == argc-1) {
+                if (i == argc - 1) {
                     printf("No output file specified with the -o flag. Ignoring\n");
                 } else {
                     outputFileName = argv[++i];
@@ -53,17 +50,17 @@ int main(int argc, char **argv) {
                 printf("Invalid option specified. Ignoring.\n");
             }
         } else {
-            pushVector(&inputFiles, argv[i]);
+            sb_push(inputFiles, argv[i]);
         }
     }
 
-    if (!inputFiles.size) {
+    if (!sb_count(inputFiles)) {
         printf("No input files specified. Exiting.\n");
         return 1;
     }
 
-    for(int i = 0; i < inputFiles.size; i++) {
-        char *inputFile = ((char **)inputFiles.elements)[i];
+    for (int i = 0; i < sb_count(inputFiles); i++) {
+        char *inputFile = inputFiles[i];
         parse(lex(inputFile));
     }
 

@@ -1,10 +1,9 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "vector.h"
-
 #include "ast.h"
+#include "lexer.h"
 
-void parse(vector tokens);
+void parse(Token *tokens);
 
 #endif

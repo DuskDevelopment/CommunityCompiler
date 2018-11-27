@@ -1,8 +1,6 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include "vector.h"
-
 enum TOKEN_TYPE {
     TOKEN_IDENTIFIER,
     TOKEN_CONSTANT,
@@ -15,11 +13,11 @@ enum TOKEN_TYPE {
     TOKEN_SEMICOLON,
 };
 
-typedef struct token {
+typedef struct Token {
     int tokenType;
     char *value;
-} token;
+} Token;
 
-vector lex(char *fileName);
+Token *lex(char *fileName);
 
 #endif

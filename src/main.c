@@ -25,6 +25,8 @@ print_version(void) {
 
 int main(int argc, char **argv) {
 
+    printf("init_START\n");
+
     if (argc == 1) {
         print_help();
     }
@@ -50,7 +52,7 @@ int main(int argc, char **argv) {
                 printf("Invalid option specified. Ignoring.\n");
             }
         } else {
-            sb_push(inputFiles, argv[i]);
+                    sb_push(inputFiles, argv[i]);
         }
     }
 
@@ -58,6 +60,8 @@ int main(int argc, char **argv) {
         printf("No input files specified. Exiting.\n");
         return 1;
     }
+
+    printf("init_FINISH\n");
 
     for (int i = 0; i < sb_count(inputFiles); i++) {
         char *inputFile = inputFiles[i];

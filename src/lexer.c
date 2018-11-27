@@ -3,30 +3,187 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
+#include "lexer.h"
 #include "stretchy_buffers.h"
 #include "string.h"
 
-#define arrayCount(value) (int)(sizeof(value)/sizeof((value)[0]))
+static Token createToken() {
+    return (Token) {0};
+}
 
-char *tokenValues[] = {"fn", "(", ")", "{", "}", "return", ";"};
+static Token emptyToken() {
+    return (Token) {
+            .tokenType = TOKEN_EMPTY
+    };
+}
 
-enum TOKEN_TYPE {
-    TOKEN_IDENTIFIER,
-    TOKEN_CONSTANT,
-    TOKEN_FUNCTION,
-    TOKEN_OPEN_PAREN,
-    TOKEN_CLOSE_PAREN,
-    TOKEN_OPEN_BRACE,
-    TOKEN_CLOSE_BRACE,
-    TOKEN_RETURN,
-    TOKEN_SEMICOLON,
-};
+static Token identifierToken(char *identifier) {
+    Token token = createToken();
+    token.tokenType = TOKEN_IDENTIFIER;
+    token.identifier = identifier;
+    return token;
+}
 
-typedef struct {
-    int tokenType;
-    char *value;
-} Token;
+static Token *lexSource(char *inputBuffer) {
+    Token *tokens = NULL;
+
+    Token token = {0};
+
+    switch (*inputBuffer) {
+        case ' ':
+        case '\n':
+        case '\t':
+        case '\r':
+        case '\v': {
+            // Skip past whitespace
+            while (isspace(*inputBuffer)) {
+                inputBuffer++;
+            }
+            break;
+        }
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9': {
+            char *tokenStart = inputBuffer;
+            while (isdigit(inputBuffer)) {
+                inputBuffer++;
+            }
+            char *tokenEnd = inputBuffer;
+            unsigned long length = tokenEnd - tokenStart;
+/*
+                char *literal = malloc(sizeof(char) * length + 1);
+                strncpy(literal, tokenStart, length);
+                literal[length] = '\0';
+*/
+            token.tokenType = TOKEN_INTEGER_LITERAL;
+            token.integerLiteral = "lit";
+            break;
+        }
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_': {
+            char *tokenStart = inputBuffer;
+            while (isalnum(*inputBuffer) || *inputBuffer == '_') {
+                inputBuffer++;
+            }
+            char *tokenEnd = inputBuffer;
+            unsigned long length = tokenEnd - tokenStart;
+/*
+                char *identifier = malloc(sizeof(char) * length + 1);
+                strncpy(identifier, tokenStart, length);
+                identifier[length] = '\0';
+*/
+            // TODO: Check for identifier or keyword
+            token.tokenType = TOKEN_IDENTIFIER;
+            token.identifier = "lit";
+
+            inputBuffer++;
+
+            break;
+        }
+        case '(': {
+            token.tokenType = TOKEN_OPEN_PAREN;
+            inputBuffer++;
+            break;
+        }
+        case ')': {
+            token.tokenType = TOKEN_CLOSE_PAREN;
+            inputBuffer++;
+            break;
+        }
+        case '{': {
+            token.tokenType = TOKEN_OPEN_BRACE;
+            inputBuffer++;
+            break;
+        }
+        case '}': {
+            token.tokenType = TOKEN_CLOSE_BRACE;
+            inputBuffer++;
+            break;
+        }
+        case ';': {
+            token.tokenType = TOKEN_SEMICOLON;
+            inputBuffer++;
+            break;
+        }
+        case '\0': {
+            token.tokenType = TOKEN_EOF;
+            break;
+        }
+        default: {
+            token.tokenType = TOKEN_EMPTY;
+            break;
+        }
+    }
+
+            sb_push(tokens, token);
+
+    for (int i = 0; i < sb_count(tokens); i++) {
+        Token currentToken = tokens[i];
+        printf("type: %d, value: %s\n", currentToken.tokenType, currentToken.identifier);
+    }
+
+    return tokens;
+}
 
 Token *lex(char *fileName) {
     FILE *inputFile;
@@ -43,51 +200,11 @@ Token *lex(char *fileName) {
     fclose(inputFile);
     inputBuffer[inputFileSize] = 0;
 
-    Token *tokens = NULL;
+    printf("loaded_FILE\n");
 
-    while (*inputBuffer) {
-        if (*inputBuffer == ' ' || *inputBuffer == '\n' || *inputBuffer == '\r' || *inputBuffer == '\t') {
-            inputBuffer++;
-            continue;
-        }
+    char *testInput = "52\0";
 
-        int tokenLength = stringFindNext(inputBuffer, " \t\n\r(){};", 9) - inputBuffer;
-        if (!tokenLength) {
-            tokenLength = 1;
-        }
+    return lexSource(testInput);
 
-        char *tokenValueSubstring = stringSubstring(inputBuffer, tokenLength);
-
-        // printf("%d\n", TokenLength);
-        Token newToken = {
-                .tokenType = TOKEN_IDENTIFIER,
-                .value = tokenValueSubstring
-        };
-
-        bool matched = false;
-        for (int i = 0; i < arrayCount(tokenValues); i++) {
-            if (stringCompare(tokenValueSubstring, tokenValues[i])) {
-                matched = true;
-                newToken.tokenType = i + 2;
-            }
-        }
-
-        if (!matched) {
-            if (!isalpha(tokenValueSubstring[0])) {
-                newToken.tokenType = TOKEN_CONSTANT;
-            }
-        }
-
-        sb_push(tokens, newToken);
-        // printf("type: %d, value: %s\n", NewToken->TokenType, NewToken->Value);
-
-        inputBuffer += tokenLength;
-    }
-
-    for (int i = 0; i < sb_count(tokens); i++) {
-        Token currentToken = tokens[i];
-        printf("type: %d, value: %s\n", currentToken.tokenType, currentToken.value);
-    }
-
-    return tokens;
+    return lexSource(inputBuffer);
 }

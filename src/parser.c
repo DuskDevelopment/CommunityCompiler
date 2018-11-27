@@ -9,7 +9,7 @@ void parse(Token *tokens) {
     for (int i = 0; i < sb_count(tokens); ++i) {
         Token token = tokens[i];
         int type = token.tokenType;
-        if (type == TOKEN_INTEGER_LITERAL || type == TOKEN_IDENTIFIER) {
+        if (type == TOKEN_IDENTIFIER) {
             free(token.identifier);
         }
     }

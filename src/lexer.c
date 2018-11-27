@@ -48,8 +48,10 @@ static Token *lexSource(char *inputBuffer) {
                 strncpy(literal, tokenStart, length);
                 literal[length] = '\0';
 
+                long value = strtol(literal, NULL, 10);
+
                 token.tokenType = TOKEN_INTEGER_LITERAL;
-                token.identifier = literal;
+                token.intLiteral = value;
                 break;
             }
             case 'a':
@@ -167,7 +169,13 @@ static Token *lexSource(char *inputBuffer) {
 
     for (int i = 0; i < sb_count(tokens); i++) {
         Token currentToken = tokens[i];
-        printf("type: %d, value: %s\n", currentToken.tokenType, currentToken.identifier);
+        printf("type: %d, ", currentToken.tokenType);
+        if (currentToken.tokenType == TOKEN_INTEGER_LITERAL) {
+            printf("value: %lu", currentToken.intLiteral);
+        } else {
+            printf("value: %s", currentToken.identifier);
+        }
+        printf("\n");
     }
 
     return tokens;

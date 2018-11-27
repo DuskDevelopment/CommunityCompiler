@@ -9,23 +9,6 @@
 #include "stretchy_buffers.h"
 #include "string.h"
 
-static Token createToken() {
-    return (Token) {0};
-}
-
-static Token emptyToken() {
-    return (Token) {
-            .tokenType = TOKEN_EMPTY
-    };
-}
-
-static Token identifierToken(char *identifier) {
-    Token token = createToken();
-    token.tokenType = TOKEN_IDENTIFIER;
-    token.identifier = identifier;
-    return token;
-}
-
 static Token *lexSource(char *inputBuffer) {
     Token *tokens = NULL;
 

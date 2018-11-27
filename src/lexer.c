@@ -4,10 +4,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "stretchy_buffers.h"
 #include "string.h"
-#include "vector.h"
 
-#define arrayCount(value) (int)(sizeof(value)/sizeof(value[0]))
+#define arrayCount(value) (int)(sizeof(value)/sizeof((value)[0]))
 
 char *tokenValues[] = {"fn", "(", ")", "{", "}", "return", ";"};
 
@@ -23,10 +23,10 @@ enum TOKEN_TYPE {
     TOKEN_SEMICOLON,
 };
 
-typedef struct token {
+typedef struct {
     int tokenType;
     char *value;
-} token;
+} Token;
 
 void lex(char *fileName) {
     FILE *inputFile;
@@ -38,17 +38,14 @@ void lex(char *fileName) {
     inputFileSize = ftell(inputFile);
     rewind(inputFile);
 
-    inputBuffer = (char *)malloc(inputFileSize * sizeof(char) + 1);
+    inputBuffer = (char *) malloc(inputFileSize * sizeof(char) + 1);
     fread(inputBuffer, inputFileSize, 1, inputFile);
     fclose(inputFile);
     inputBuffer[inputFileSize] = 0;
 
-    vector tokenVector = {0};
-    tokenVector.elementSize = sizeof(token);
-    tokenVector.maxSize = 20;
-    tokenVector.elements = malloc(sizeof(tokenVector.elementSize) * tokenVector.maxSize);
+    Token *tokens = NULL;
 
-    while(*inputBuffer) {
+    while (*inputBuffer) {
         if (*inputBuffer == ' ' || *inputBuffer == '\n' || *inputBuffer == '\r' || *inputBuffer == '\t') {
             inputBuffer++;
             continue;
@@ -62,34 +59,33 @@ void lex(char *fileName) {
         char *tokenValueSubstring = stringSubstring(inputBuffer, tokenLength);
 
         // printf("%d\n", TokenLength);
-        token *newToken = malloc(sizeof(token));
-        newToken->tokenType = TOKEN_IDENTIFIER;
-        newToken->value = tokenValueSubstring;
+        Token newToken = {
+                .tokenType = TOKEN_IDENTIFIER,
+                .value = tokenValueSubstring
+        };
 
         bool matched = false;
-        for(int i = 0; i < arrayCount(tokenValues); i++) {
+        for (int i = 0; i < arrayCount(tokenValues); i++) {
             if (stringCompare(tokenValueSubstring, tokenValues[i])) {
                 matched = true;
-                newToken->tokenType = i+2;
+                newToken.tokenType = i + 2;
             }
         }
 
         if (!matched) {
             if (!isalpha(tokenValueSubstring[0])) {
-                newToken->tokenType = TOKEN_CONSTANT;
+                newToken.tokenType = TOKEN_CONSTANT;
             }
         }
 
-        pushVector(&tokenVector, newToken);
+        sb_push(tokens, newToken);
         // printf("type: %d, value: %s\n", NewToken->TokenType, NewToken->Value);
 
-        if(tokenLength)
-            inputBuffer+=tokenLength;
+        inputBuffer += tokenLength;
     }
 
-    for(int i = 0; i < tokenVector.size; i++)
-    {
-        token *currentToken = tokenVector.elements[i];
-        printf("type: %d, value: %s\n", currentToken->tokenType, currentToken->value);
+    for (int i = 0; i < sb_count(tokens); i++) {
+        Token currentToken = tokens[i];
+        printf("type: %d, value: %s\n", currentToken.tokenType, currentToken.value);
     }
 }

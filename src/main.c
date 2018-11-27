@@ -25,8 +25,6 @@ print_version(void) {
 
 int main(int argc, char **argv) {
 
-    printf("init_START\n");
-
     if (argc == 1) {
         print_help();
     }
@@ -61,12 +59,12 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    printf("init_FINISH\n");
-
     for (int i = 0; i < sb_count(inputFiles); i++) {
         char *inputFile = inputFiles[i];
         parse(lex(inputFile));
     }
+
+            sb_free(inputFiles);
 
     return 0;
 }

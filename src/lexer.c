@@ -29,153 +29,158 @@ static Token identifierToken(char *identifier) {
 static Token *lexSource(char *inputBuffer) {
     Token *tokens = NULL;
 
-    Token token = {0};
+    while (*inputBuffer) {
+        Token token = {0};
 
-    switch (*inputBuffer) {
-        case ' ':
-        case '\n':
-        case '\t':
-        case '\r':
-        case '\v': {
-            // Skip past whitespace
-            while (isspace(*inputBuffer)) {
-                inputBuffer++;
+        switch (*inputBuffer) {
+            case ' ':
+            case '\n':
+            case '\t':
+            case '\r':
+            case '\v': {
+                // Skip past whitespace
+                while (isspace(*inputBuffer)) {
+                    inputBuffer++;
+                }
+                continue;
             }
-            break;
-        }
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9': {
-            char *tokenStart = inputBuffer;
-            while (isdigit(inputBuffer)) {
-                inputBuffer++;
-            }
-            char *tokenEnd = inputBuffer;
-            unsigned long length = tokenEnd - tokenStart;
-/*
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9': {
+                char *tokenStart = inputBuffer;
+                while (isdigit(*inputBuffer)) {
+                    inputBuffer++;
+                }
+                char *tokenEnd = inputBuffer;
+
+                unsigned long length = tokenEnd - tokenStart;
                 char *literal = malloc(sizeof(char) * length + 1);
                 strncpy(literal, tokenStart, length);
                 literal[length] = '\0';
-*/
-            token.tokenType = TOKEN_INTEGER_LITERAL;
-            token.integerLiteral = "lit";
-            break;
-        }
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_': {
-            char *tokenStart = inputBuffer;
-            while (isalnum(*inputBuffer) || *inputBuffer == '_') {
-                inputBuffer++;
+
+                token.tokenType = TOKEN_INTEGER_LITERAL;
+                token.literal = literal;
+                break;
             }
-            char *tokenEnd = inputBuffer;
-            unsigned long length = tokenEnd - tokenStart;
-/*
+            case 'a':
+            case 'b':
+            case 'c':
+            case 'd':
+            case 'e':
+            case 'f':
+            case 'g':
+            case 'h':
+            case 'i':
+            case 'j':
+            case 'k':
+            case 'l':
+            case 'm':
+            case 'n':
+            case 'o':
+            case 'p':
+            case 'q':
+            case 'r':
+            case 's':
+            case 't':
+            case 'u':
+            case 'v':
+            case 'w':
+            case 'x':
+            case 'y':
+            case 'z':
+            case 'A':
+            case 'B':
+            case 'C':
+            case 'D':
+            case 'E':
+            case 'F':
+            case 'G':
+            case 'H':
+            case 'I':
+            case 'J':
+            case 'K':
+            case 'L':
+            case 'M':
+            case 'N':
+            case 'O':
+            case 'P':
+            case 'Q':
+            case 'R':
+            case 'S':
+            case 'T':
+            case 'U':
+            case 'V':
+            case 'W':
+            case 'X':
+            case 'Y':
+            case 'Z':
+            case '_': {
+                char *tokenStart = inputBuffer;
+                while (isalnum(*inputBuffer) || *inputBuffer == '_') {
+                    inputBuffer++;
+                }
+                char *tokenEnd = inputBuffer;
+
+                unsigned long length = tokenEnd - tokenStart;
                 char *identifier = malloc(sizeof(char) * length + 1);
                 strncpy(identifier, tokenStart, length);
                 identifier[length] = '\0';
-*/
-            // TODO: Check for identifier or keyword
-            token.tokenType = TOKEN_IDENTIFIER;
-            token.identifier = "lit";
 
-            inputBuffer++;
+                // TODO: Check for identifier or keyword
+                token.tokenType = TOKEN_IDENTIFIER;
+                token.identifier = identifier;
 
-            break;
+                break;
+            }
+            case '(': {
+                token.tokenType = TOKEN_OPEN_PAREN;
+                token.identifier = "(";
+                inputBuffer++;
+                break;
+            }
+            case ')': {
+                token.tokenType = TOKEN_CLOSE_PAREN;
+                token.identifier = ")";
+                inputBuffer++;
+                break;
+            }
+            case '{': {
+                token.tokenType = TOKEN_OPEN_BRACE;
+                token.identifier = "{";
+                inputBuffer++;
+                break;
+            }
+            case '}': {
+                token.tokenType = TOKEN_CLOSE_BRACE;
+                token.identifier = "}";
+                inputBuffer++;
+                break;
+            }
+            case ';': {
+                token.tokenType = TOKEN_SEMICOLON;
+                token.identifier = ";";
+                inputBuffer++;
+                break;
+            }
+            case '\0': {
+                token.tokenType = TOKEN_EOF;
+                break;
+            }
+            default: {
+
+                break;
+            }
         }
-        case '(': {
-            token.tokenType = TOKEN_OPEN_PAREN;
-            inputBuffer++;
-            break;
-        }
-        case ')': {
-            token.tokenType = TOKEN_CLOSE_PAREN;
-            inputBuffer++;
-            break;
-        }
-        case '{': {
-            token.tokenType = TOKEN_OPEN_BRACE;
-            inputBuffer++;
-            break;
-        }
-        case '}': {
-            token.tokenType = TOKEN_CLOSE_BRACE;
-            inputBuffer++;
-            break;
-        }
-        case ';': {
-            token.tokenType = TOKEN_SEMICOLON;
-            inputBuffer++;
-            break;
-        }
-        case '\0': {
-            token.tokenType = TOKEN_EOF;
-            break;
-        }
-        default: {
-            token.tokenType = TOKEN_EMPTY;
-            break;
-        }
+
+                sb_push(tokens, token);
     }
-
-            sb_push(tokens, token);
 
     for (int i = 0; i < sb_count(tokens); i++) {
         Token currentToken = tokens[i];
@@ -199,12 +204,6 @@ Token *lex(char *fileName) {
     fread(inputBuffer, inputFileSize, 1, inputFile);
     fclose(inputFile);
     inputBuffer[inputFileSize] = 0;
-
-    printf("loaded_FILE\n");
-
-    char *testInput = "52\0";
-
-    return lexSource(testInput);
 
     return lexSource(inputBuffer);
 }

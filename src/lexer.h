@@ -18,7 +18,7 @@ typedef struct Token {
     union {
         char *identifier;
         char *keyword;
-        char *integerLiteral;
+        char *literal;
     };
 } Token;
 

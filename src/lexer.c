@@ -41,9 +41,8 @@ static Token *lexSource(char *inputBuffer) {
                 while (isdigit(*inputBuffer)) {
                     inputBuffer++;
                 }
-                char *tokenEnd = inputBuffer;
 
-                unsigned long length = tokenEnd - tokenStart;
+                unsigned long length = inputBuffer - tokenStart;
                 char *literal = malloc(sizeof(char) * length + 1);
                 strncpy(literal, tokenStart, length);
                 literal[length] = '\0';
@@ -111,9 +110,8 @@ static Token *lexSource(char *inputBuffer) {
                 while (isalnum(*inputBuffer) || *inputBuffer == '_') {
                     inputBuffer++;
                 }
-                char *tokenEnd = inputBuffer;
 
-                unsigned long length = tokenEnd - tokenStart;
+                unsigned long length = inputBuffer - tokenStart;
                 char *identifier = malloc(sizeof(char) * length + 1);
                 strncpy(identifier, tokenStart, length);
                 identifier[length] = '\0';

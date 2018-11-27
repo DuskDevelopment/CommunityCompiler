@@ -1,5 +1,6 @@
 #include "vector.h"
 #include "lexer.h"
+#include "parser.h"
 #include "string.h"
 
 #include <stdlib.h>
@@ -63,7 +64,7 @@ int main(int argc, char **argv) {
 
     for(int i = 0; i < inputFiles.size; i++) {
         char *inputFile = ((char **)inputFiles.elements)[i];
-        lex(inputFile);
+        parse(lex(inputFile));
     }
 
     return 0;

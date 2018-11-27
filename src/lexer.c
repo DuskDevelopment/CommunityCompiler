@@ -28,7 +28,7 @@ typedef struct token {
     char *value;
 } token;
 
-void lex(char *fileName) {
+vector lex(char *fileName) {
     FILE *inputFile;
     long inputFileSize;
     char *inputBuffer;
@@ -92,4 +92,6 @@ void lex(char *fileName) {
         token *currentToken = tokenVector.elements[i];
         printf("type: %d, value: %s\n", currentToken->tokenType, currentToken->value);
     }
+    
+    return tokenVector;
 }

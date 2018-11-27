@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 typedef struct ast_expression {
     union {
         char *identifier;

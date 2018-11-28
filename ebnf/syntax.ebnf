@@ -6,15 +6,18 @@ alphanum = alphachar | numchar
 whitespace = ? all whitespace characters ?
 
 identifier = alphachar, {alphanum}
+number = ["-"], (("1","2","3","4","5","6","7","8","9"), {numchar}) | "0"
 
-expression = ? magic, WIP ?
+expression = identifier | number
 
 vardecl = ("var" | "let"), whitespace, {whitespace}, identifier, {whitespace}, [":", {whitespace}, identifier, {whitespace}], ["=", {whitespace}, expression, {whitespace}] (* We'll let semantics get some of the tricky cases here *)
+
+return = "return", whitespace {whitespace}, expression
 
 statement = (expression | vardecl), {whitespace}, ";"
 
 code block = "{", {whitespace}, {statement, {whitespace}}, [expression, {whitespace}], "}"
 
-function = "fn", whitespace, {whitespace}, identifier, {whitespace}, "(", {whitespace}, identifier, whitespace, {whitespace}, identifier, {whitespace}, {",", {whitespace}, identifier, whitespace, {whitespace}, identifier, {whitespace}}, ")", {whitespace}, [":", {whitespace}, identifier, {whitespace}], code block
+function = "fn", whitespace, {whitespace}, identifier, {whitespace}, "(", [{whitespace}, identifier, whitespace, {whitespace}, identifier, {whitespace}, {",", {whitespace}, identifier, whitespace, {whitespace}, identifier, {whitespace}}], ")", {whitespace}, [":", {whitespace}, identifier, {whitespace}], code block
 
 grammar = {(statement | function), {whitespace}}

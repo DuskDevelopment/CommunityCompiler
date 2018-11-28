@@ -3,4 +3,7 @@ project(duskc C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(duskc src/main.c src/vector.c src/string.c src/lexer.c)
+file(GLOB_RECURSE HEADERS ${PROJECT_SOURCE_DIR}/src/*.h)
+file(GLOB_RECURSE SOURCE ${PROJECT_SOURCE_DIR}/src/*.c)
+
+add_executable(duskc ${HEADERS} ${SOURCE})

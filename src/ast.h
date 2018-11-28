@@ -1,10 +1,11 @@
 #include <stdbool.h>
 
 typedef struct ast_expression {
+    int type;
     union {
         char *identifier;
-        int *number;
-        double *floatingNumber;
+        int number;
+        double floatingNumber;
     } content;
 } ast_expression;
 
@@ -21,6 +22,7 @@ typedef struct ast_return {
 } ast_return;
 
 typedef struct ast_statement {
+    int type;
     union {
         ast_expression expression;
         ast_vardecl vardecl;
@@ -44,6 +46,7 @@ typedef struct ast_function {
 } ast_function;
 
 typedef struct ast_grammar {
+    int *types;
     union {
         ast_function function;
         ast_statement statement;

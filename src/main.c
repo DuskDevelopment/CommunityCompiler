@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "parser.h"
 #include "stretchy_buffers.h"
 #include "string.h"
 
@@ -49,7 +50,7 @@ int main(int argc, char **argv) {
                 printf("Invalid option specified. Ignoring.\n");
             }
         } else {
-            sb_push(inputFiles, argv[i]);
+                    sb_push(inputFiles, argv[i]);
         }
     }
 
@@ -60,8 +61,10 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < sb_count(inputFiles); i++) {
         char *inputFile = inputFiles[i];
-        lex(inputFile);
+        parse(lex(inputFile));
     }
+
+            sb_free(inputFiles);
 
     return 0;
 }

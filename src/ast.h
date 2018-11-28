@@ -1,3 +1,8 @@
+#ifndef AST_H
+#define AST_H
+
+#include <stdbool.h>
+
 typedef struct ast_expression {
     union {
         char *identifier;
@@ -47,3 +52,5 @@ typedef struct ast_grammar {
         ast_statement statement;
     } *statements;
 } ast_grammar;
+
+#endif

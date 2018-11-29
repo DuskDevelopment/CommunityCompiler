@@ -1,4 +1,5 @@
-language: cpp
+language: c
+dist: xenial
 script: mkdir build && cd build && cmake .. && make && ./duskc ../examples/main.ds
 compiler:
   - clang

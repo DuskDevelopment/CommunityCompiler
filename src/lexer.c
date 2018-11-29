@@ -13,7 +13,7 @@ static Token *lexSource(char *inputBuffer) {
     Token *tokens = NULL;
 
     while (*inputBuffer) {
-        Token token = {0};
+        Token token = (Token) {0};
 
         switch (*inputBuffer) {
             case ' ':

@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
                 printf("Invalid option specified. Ignoring.\n");
             }
         } else {
-            sb_push(inputFiles, argv[i]);
+                    sb_push(inputFiles, argv[i]);
         }
     }
 
@@ -63,6 +63,8 @@ int main(int argc, char **argv) {
         char *inputFile = inputFiles[i];
         parse(lex(inputFile));
     }
+
+            sb_free(inputFiles);
 
     return 0;
 }

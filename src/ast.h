@@ -1,3 +1,6 @@
+#ifndef AST_H
+#define AST_H
+
 #include <stdbool.h>
 
 typedef struct ast_expression {
@@ -52,3 +55,5 @@ typedef struct ast_grammar {
         ast_statement *statement;
     } *statements;
 } ast_grammar;
+
+#endif

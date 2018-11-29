@@ -4,7 +4,9 @@
 #include "string.h"
 
 #include "ast.h"
-#include "lexer.h"
+#include "parser.h"
+#include "stretchy_buffers.h"
+#include "string.h"
 
 ast_statement *parseStatement(Token *tokens, int *pos, int *endPos) {
     if(endPos) *endPos = *pos;
@@ -99,5 +101,15 @@ void parse(Token *tokens) {
     int position = 0;
     ast_grammar *grammar = parseGrammar(tokens, &position);
     fprintf(stderr, "at token id %i\n", position);
+
+    // Clean up tokens
+    for (int i = 0; i < sb_count(tokens); ++i) {
+        Token token = tokens[i];
+        int type = token.tokenType;
+        if (type == TOKEN_IDENTIFIER) {
+            free(token.identifier);
+        }
+    }
+
     sb_free(tokens);
 }

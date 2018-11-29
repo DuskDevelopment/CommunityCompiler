@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#include "string.h"
+
 int stringLength(char *input);
 
 bool stringCompare(char *string1, char* string2);

@@ -14,5 +14,5 @@ void parse(Token *tokens) {
         }
     }
 
-    sb_free(tokens);
+    (sb_free(tokens));
 }

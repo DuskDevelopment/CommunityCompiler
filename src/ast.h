@@ -30,9 +30,9 @@ typedef struct ast_statement {
 } ast_statement;
 
 typedef struct ast_codeBlock {
-    ast_statement *statements;
+    ast_statement **statements;
     bool hasFinalExpression;
-    ast_expression finalExpression;
+    ast_expression *finalExpression;
 } ast_codeBlock;
 
 typedef struct ast_function {
@@ -42,13 +42,13 @@ typedef struct ast_function {
         char *type;
     } *parameters;
     char *returnType;
-    ast_codeBlock codeBlock;
+    ast_codeBlock *codeBlock;
 } ast_function;
 
 typedef struct ast_grammar {
     int *types;
     union {
-        ast_function function;
-        ast_statement statement;
+        ast_function *function;
+        ast_statement *statement;
     } *statements;
 } ast_grammar;

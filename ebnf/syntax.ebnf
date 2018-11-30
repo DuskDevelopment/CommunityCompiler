@@ -14,10 +14,10 @@ vardecl = ("var" | "let"), whitespace, {whitespace}, identifier, {whitespace}, [
 
 return = "return", whitespace {whitespace}, expression
 
-statement = (expression | vardecl | return), {whitespace}, ";"
+statement = (vardecl | return | expression), {whitespace}, ";"
 
 code block = "{", {whitespace}, {statement, {whitespace}}, [expression, {whitespace}], "}"
 
 function = "fn", whitespace, {whitespace}, identifier, {whitespace}, "(", [{whitespace}, identifier, whitespace, {whitespace}, identifier, {whitespace}, {",", {whitespace}, identifier, whitespace, {whitespace}, identifier, {whitespace}}], ")", {whitespace}, [":", {whitespace}, identifier, {whitespace}], code block
 
-grammar = {(statement | function), {whitespace}}
+grammar = {(function | statement), {whitespace}}

@@ -7,8 +7,8 @@ typedef struct ast_expression {
     int type;
     union {
         char *identifier;
-        int number;
-        double floatingNumber;
+        int integer;
+        double real;
     };
 } ast_expression;
 
@@ -21,14 +21,15 @@ typedef struct ast_vardecl {
 } ast_vardecl;
 
 typedef struct ast_return {
-    ast_expression value;
+    ast_expression *value;
 } ast_return;
 
 typedef struct ast_statement {
     int type;
     union {
-        ast_expression expression;
-        ast_vardecl vardecl;
+        ast_expression *expression;
+        ast_vardecl *vardecl;
+        ast_return *returnStatement;
     };
 } ast_statement;
 

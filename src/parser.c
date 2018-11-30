@@ -5,10 +5,69 @@
 #include "stretchy_buffers.h"
 #include "string.h"
 
+// This function will be rewriteen when we need more types of expressions. For now, it only acknowledges integers.
+ast_expression *parseExpression(Token *tokens, int *pos, int *endPos) {
+    ast_expression *result = malloc(sizeof(ast_expression));
+    result->type = 1; // integer
+    int curPos = *pos;
+    if(tokens[curPos].tokenType != TOKEN_INTEGER_LITERAL) {
+        fprintf(stderr, "Expected integer literal ");
+        if(endPos) *endPos = curPos;
+        return NULL;
+    }
+    result->integer = tokens[curPos].intLiteral;
+    curPos++;
+    
+    *pos = curPos;
+    *endPos = curPos;
+    return result;
+}
+
+ast_return *parseReturn(Token *tokens, int *pos, int *endPos) {
+    ast_expression *value;
+    int curPos = *pos;
+    if(tokens[curPos].tokenType != TOKEN_IDENTIFIER || !stringCompare("return", tokens[curPos].identifier)) {
+        fprintf(stderr, "Expected return statement ");
+        if(endPos) *endPos = curPos;
+        return NULL;
+    }
+    curPos++;
+    if(!(value = parseExpression(tokens, &curPos, endPos))) {
+        return NULL; // End pos has already been set, error has been printed
+    }
+    
+    *pos = curPos;
+    *endPos = curPos;
+    ast_return *result = malloc(sizeof(ast_return));
+    {
+        result->value = value;
+    }
+    return result;
+}
+
+// This function will be rewritten when we need more statements. For now, it only acknowledges return.
 ast_statement *parseStatement(Token *tokens, int *pos, int *endPos) {
-    fprintf(stderr, "Statement parsing not implemented ");
-    if(endPos) *endPos = *pos;
-    return NULL;
+    ast_statement *result = malloc(sizeof(ast_statement));
+    result->type = 2; // return
+    int curPos = *pos;
+    if(tokens[curPos].tokenType != TOKEN_IDENTIFIER || !stringCompare("return", tokens[curPos].identifier)) {
+        fprintf(stderr, "Expected return statement ");
+        if(endPos) *endPos = curPos;
+        return NULL;
+    }
+    if(!(result->returnStatement = parseReturn(tokens, &curPos, endPos))) {
+        return NULL; // End pos has already been set, error has been printed
+    }
+    if(tokens[curPos].tokenType != TOKEN_SEMICOLON) {
+        fprintf(stderr, "Expected semicolon ");
+        if(endPos) *endPos = curPos;
+        return NULL;
+    }
+    curPos++;
+    
+    *pos = curPos;
+    *endPos = curPos;
+    return result;
 }
 
 ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
@@ -17,7 +76,7 @@ ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
     ast_expression *finalExpression = NULL;
     int curPos = *pos;
     if(tokens[curPos].tokenType != TOKEN_OPEN_BRACE) { // Expect code block
-        // Don't print; should have been caught by earlier function
+        fprintf(stderr, "Expected beginning of code block ");
         if(endPos) *endPos = curPos;
         return NULL;
     }
@@ -29,7 +88,7 @@ ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
             break;
         }
         if(!(curStatement = parseStatement(tokens, &curPos, endPos))) {
-            return NULL; // End pos has already been set
+            return NULL; // End pos has already been set, error has been printed
         }
         sb_push(statements, curStatement);
     }
@@ -54,7 +113,7 @@ ast_function *parseFunction(Token *tokens, int *pos, int *endPos) {
     ast_codeBlock *codeBlock;
     int curPos = *pos;
     if(tokens[curPos].tokenType != TOKEN_IDENTIFIER || !stringCompare("fn", tokens[curPos].identifier)) { // Not a function if it doesn't begin with `fn`
-        // Don't print; should have been caught by earlier function
+        fprintf(stderr, "Expected function ");
         if(endPos) *endPos = curPos;
         return NULL;
     }

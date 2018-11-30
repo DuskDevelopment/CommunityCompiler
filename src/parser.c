@@ -16,8 +16,8 @@ ast_statement *parseStatement(Token *tokens, int *pos, int *endPos) {
 
 ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
     ast_statement **statements = NULL; // stretchy buffer
-    bool hasFinalExpression;
-    ast_expression *finalExpression;
+    bool hasFinalExpression = false; // Don't allow for now
+    ast_expression *finalExpression = NULL;
     int curPos = *pos;
     if(tokens[curPos].tokenType != TOKEN_OPEN_BRACE) { // Expect code block
         // Don't print; should have been caught by earlier function
@@ -25,6 +25,17 @@ ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
         return NULL;
     }
     curPos++;
+    
+    ast_statement *curStatement;
+    while(true) {
+        if(tokens[curPos].tokenType == TOKEN_CLOSE_BRACE) {
+            break;
+        }
+        if(!(curStatement = parseStatement(tokens, &curPos, endPos))) {
+            return NULL; // End pos has already been set
+        }
+        sb_push(statements, curStatement);
+    }
     
     *pos = curPos;
     *endPos = curPos;

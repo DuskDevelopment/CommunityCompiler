@@ -12,7 +12,7 @@ print_help(void) {
     printf("Options:\n");
     printf("  --help        Display this information.\n");
     printf("  --version     Display compiler version information.\n");
-    printf("  -dumpversion  Display the version of the compiler.\n");
+    printf("  --dumpversion  Display the version of the compiler.\n");
     printf("  -o <file>     Place the output into <file>.\n");
 }
 

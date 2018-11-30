@@ -12,7 +12,7 @@ print_help(void) {
     printf("Options:\n");
     printf("  --help        Display this information.\n");
     printf("  --version     Display compiler version information.\n");
-    printf("  --dumpversion  Display the version of the compiler.\n");
+    printf("  -dumpversion  Display the version of the compiler.\n");
     printf("  -o <file>     Place the output into <file>.\n");
 }
 
@@ -38,8 +38,8 @@ int main(int argc, char **argv) {
                 print_help();
             } else if (stringCompare(argv[i], "--version")) {
                 print_version();
-            } else if (stringCompare(argv[i], "--dumpversion")) {
-                print_version();
+            } else if (stringCompare(argv[i], "-dumpversion")) {
+                printf("1\n");
             } else if (stringCompare(argv[i], "-o")) {
                 if (i == argc - 1) {
                     printf("No output file specified with the -o flag. Ignoring\n");

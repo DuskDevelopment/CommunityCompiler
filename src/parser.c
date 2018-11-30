@@ -36,7 +36,7 @@ ast_function *parseFunction(Token *tokens, int *pos, int *endPos) {
         if(endPos) *endPos = curPos;
         return NULL;
     }
-    name = tokens[curPos].value;
+    name = tokens[curPos].identifier;
     curPos++;
     if(tokens[curPos].tokenType != 3) { // Expect open parenthesis
         if(endPos) *endPos = curPos;

@@ -85,6 +85,7 @@ ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
     ast_statement *curStatement;
     while(true) {
         if(tokens[curPos].tokenType == TOKEN_CLOSE_BRACE) {
+            curPos++;
             break;
         }
         if(!(curStatement = parseStatement(tokens, &curPos, endPos))) {
@@ -193,7 +194,6 @@ ast_grammar *parseGrammar(Token *tokens, int *endPos) {
         result->types = types;
         result->statements = statements;
     }
-    *endPos = curPos;
     return result;
 }
 

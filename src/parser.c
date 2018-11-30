@@ -1,8 +1,5 @@
 #include <stdio.h>
 
-#include "stretchy_buffers.h"
-#include "string.h"
-
 #include "ast.h"
 #include "parser.h"
 #include "stretchy_buffers.h"

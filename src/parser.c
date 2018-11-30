@@ -15,9 +15,25 @@ ast_statement *parseStatement(Token *tokens, int *pos, int *endPos) {
 }
 
 ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
-    fprintf(stderr, "Code block parsing not implemented ");
-    if(endPos) *endPos = *pos;
-    return NULL;
+    ast_statement **statements = NULL; // stretchy buffer
+    bool hasFinalExpression;
+    ast_expression *finalExpression;
+    int curPos = *pos;
+    if(tokens[curPos].tokenType != TOKEN_OPEN_BRACE) { // Expect code block
+        // Don't print; should have been caught by earlier function
+        if(endPos) *endPos = curPos;
+        return NULL;
+    }
+    curPos++;
+    
+    *pos = curPos;
+    *endPos = curPos;
+    ast_codeBlock *result = malloc(sizeof(ast_codeBlock));
+    {
+        result->statements = statements;
+        result->hasFinalExpression = hasFinalExpression;
+        result->finalExpression = finalExpression;
+    }
 }
 
 ast_function *parseFunction(Token *tokens, int *pos, int *endPos) {
@@ -30,6 +46,7 @@ ast_function *parseFunction(Token *tokens, int *pos, int *endPos) {
     ast_codeBlock *codeBlock;
     int curPos = *pos;
     if(tokens[curPos].tokenType != TOKEN_IDENTIFIER || !stringCompare("fn", tokens[curPos].identifier)) { // Not a function if it doesn't begin with `fn`
+        // Don't print; should have been caught by earlier function
         if(endPos) *endPos = curPos;
         return NULL;
     }
@@ -61,6 +78,7 @@ ast_function *parseFunction(Token *tokens, int *pos, int *endPos) {
         return NULL; // End pos has already been set
     }
     *pos = curPos;
+    *endPos = curPos;
     ast_function *result = malloc(sizeof(ast_function));
     {
         result->name = name;
@@ -113,9 +131,9 @@ ast_grammar *parseGrammar(Token *tokens, int *endPos) {
 }
 
 void parse(Token *tokens) {
-    int position = 0;
+    int position = -1;
     ast_grammar *grammar = parseGrammar(tokens, &position);
-    fprintf(stderr, "at token id %i\n", position);
+    if(position != -1) fprintf(stderr, "at token id %i\n", position);
 
     // Clean up tokens
     for (int i = 0; i < sb_count(tokens); ++i) {

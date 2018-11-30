@@ -9,7 +9,7 @@ typedef struct ast_expression {
         char *identifier;
         int number;
         double floatingNumber;
-    } content;
+    };
 } ast_expression;
 
 typedef struct ast_vardecl {
@@ -29,7 +29,7 @@ typedef struct ast_statement {
     union {
         ast_expression expression;
         ast_vardecl vardecl;
-    } content;
+    };
 } ast_statement;
 
 typedef struct ast_codeBlock {

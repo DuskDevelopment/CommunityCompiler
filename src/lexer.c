@@ -161,7 +161,7 @@ static Token *lexSource(char *inputBuffer) {
             }
         }
 
-                sb_push(tokens, token);
+        sb_push(tokens, token);
     }
 
     for (int i = 0; i < sb_count(tokens); i++) {

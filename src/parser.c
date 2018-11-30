@@ -9,11 +9,13 @@
 #include "string.h"
 
 ast_statement *parseStatement(Token *tokens, int *pos, int *endPos) {
+    fprintf(stderr, "Statement parsing not implemented ");
     if(endPos) *endPos = *pos;
     return NULL;
 }
 
 ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
+    fprintf(stderr, "Code block parsing not implemented ");
     if(endPos) *endPos = *pos;
     return NULL;
 }
@@ -27,27 +29,34 @@ ast_function *parseFunction(Token *tokens, int *pos, int *endPos) {
     char *returnType = NULL; // Token for return type doesn't exists; can't detect
     ast_codeBlock *codeBlock;
     int curPos = *pos;
-    if(tokens[curPos].tokenType != 2) { // Not a function if it doesn't begin with `fn`
+    if(tokens[curPos].tokenType != TOKEN_IDENTIFIER || !stringCompare("fn", tokens[curPos].identifier)) { // Not a function if it doesn't begin with `fn`
         if(endPos) *endPos = curPos;
         return NULL;
     }
     curPos++;
-    if(tokens[curPos].tokenType != 0) { // Expect identifier
+    if(tokens[curPos].tokenType != TOKEN_IDENTIFIER) { // Expect identifier
+        fprintf(stderr, "Expected identifier ");
         if(endPos) *endPos = curPos;
         return NULL;
     }
     name = tokens[curPos].identifier;
     curPos++;
-    if(tokens[curPos].tokenType != 3) { // Expect open parenthesis
+    if(tokens[curPos].tokenType != TOKEN_OPEN_PAREN) { // Expect open parenthesis
+        fprintf(stderr, "Expected open parenthesis ");
         if(endPos) *endPos = curPos;
         return NULL;
     }
     curPos++;
-    while(tokens[curPos].tokenType != 4) { // Until closed parenthesis (or something else goes wrong)
+    while(tokens[curPos].tokenType != TOKEN_CLOSE_PAREN) { // Until closed parenthesis (or something else goes wrong)
         // Will fill in later
     }
     curPos++;
-    // Detect return type when the token exists
+    // I will write code to detect return type when the token exists
+    if(tokens[curPos].tokenType != TOKEN_OPEN_BRACE) { // Expect code block
+        fprintf(stderr, "Expected beginning of code block ");
+        if(endPos) *endPos = curPos;
+        return NULL;
+    }
     if(!(codeBlock = parseCodeBlock(tokens, &curPos, endPos))) {
         return NULL; // End pos has already been set
     }
@@ -70,23 +79,29 @@ ast_grammar *parseGrammar(Token *tokens, int *endPos) {
         ast_statement *statement;
     } *statements = NULL; // stretchy buffer
     for(;curPos < sb_count(tokens);) {
-        ast_statement *statement = parseStatement(tokens, &curPos, NULL);
+        int failPos;
+        if(tokens[curPos].tokenType == TOKEN_IDENTIFIER && stringCompare("fn", tokens[curPos].identifier)) {
+            ast_function *function = parseFunction(tokens, &curPos, &failPos);
+            if(function) {
+                sb_push(types, 1);
+                sb_add(statements, 1);
+                statements[sb_count(statements)-1].function = function;
+                continue;
+            } else {
+                *endPos = failPos;
+                return NULL;
+            }
+        }
+        ast_statement *statement = parseStatement(tokens, &curPos, &failPos);
         if(statement) {
             sb_push(types, 0);
             sb_add(statements, 1);
             statements[sb_count(statements)-1].statement = statement;
             continue;
+        } else {
+            *endPos = failPos;
+            return NULL;
         }
-        ast_function *function = parseFunction(tokens, &curPos, NULL);
-        if(function) {
-            sb_push(types, 1);
-            sb_add(statements, 1);
-            statements[sb_count(statements)-1].function = function;
-            continue;
-        }
-        fprintf(stderr, "error: expected function or statement\n");
-        *endPos = curPos;
-        return NULL;
     }
     ast_grammar *result = malloc(sizeof(ast_grammar));
     {

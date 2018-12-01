@@ -36,13 +36,13 @@ int main(int argc, char **argv) {
         if (argv[i][0] == '-') {
             if (stringCompare(argv[i], "--help")) {
                 print_help();
-                exit(0);
+                return 0;
             } else if (stringCompare(argv[i], "--version")) {
                 print_version();
-                exit(0);
+                return 0;
             } else if (stringCompare(argv[i], "-dumpversion")) {
                 printf("1\n");
-                exit(0);
+                return 0;
             } else if (stringCompare(argv[i], "-o")) {
                 if (i == argc - 1) {
                     printf("No output file specified with the -o flag. Ignoring\n");
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
                 printf("Invalid option specified. Ignoring.\n");
             }
         } else {
-                    sb_push(inputFiles, argv[i]);
+            sb_push(inputFiles, argv[i]);
         }
     }
 

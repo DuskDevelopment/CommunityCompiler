@@ -102,6 +102,7 @@ ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
         result->hasFinalExpression = hasFinalExpression;
         result->finalExpression = finalExpression;
     }
+    return result;
 }
 
 ast_function *parseFunction(Token *tokens, int *pos, int *endPos) {

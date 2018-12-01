@@ -197,11 +197,71 @@ ast_grammar *parseGrammar(Token *tokens, int *endPos) {
     return result;
 }
 
+void printTabs(int numTabs) {
+    for(int i = 0; i < numTabs; i++) printf("  ");
+}
+
+void printExpression(ast_expression *expression, int numTabs) {
+    printf("ast_expression {\n");
+    switch(expression->type) {
+    case 1:
+        printTabs(numTabs);
+        printf("  type = integer,\n");
+        printTabs(numTabs);
+        printf("  integer = %i\n", expression->integer);
+    }
+    printTabs(numTabs);
+    printf("}");
+}
+
+void printStatement(ast_statement *statement, int numTabs) {
+    printf("ast_statement {\n");
+    switch(statement->type) {
+    case 2:
+        printTabs(numTabs);
+        printf("  type = return,\n");
+        printTabs(numTabs);
+        printf("  value = ");
+        printExpression(statement->returnStatement->value, numTabs+1);
+        break;
+    }
+    printf("\n");
+    printTabs(numTabs);
+    printf("}");
+}
+
+void printFunction(ast_function *function, int numTabs) {
+    printTabs(numTabs);
+    printf("ast_function");
+}
+
+void printGrammar(ast_grammar *grammar, int numTabs) {
+    printf("ast_grammar {\n");
+    printTabs(numTabs);
+    printf("  statements = [\n");
+    for(int i = 0; i < sb_count(grammar->statements); i++) {
+        printTabs(numTabs+2);
+        if(grammar->types[i]) printFunction(grammar->statements[i].function, numTabs+2);
+        else printStatement(grammar->statements[i].statement, numTabs+2);
+        if(i < sb_count(grammar->statements)-1) printf(",\n");
+        else {
+            printf("\n");
+            printTabs(numTabs);
+            printf("  ]\n");
+        }
+    }
+    printTabs(numTabs);
+    printf("}");
+}
+
 void parse(Token *tokens) {
     int position = -1;
     ast_grammar *grammar = parseGrammar(tokens, &position);
     if(position != -1) fprintf(stderr, "at token id %i\n", position);
-
+    
+    printGrammar(grammar, 0);
+    printf("\n\n");
+    
     // Clean up tokens
     for (int i = 0; i < sb_count(tokens); ++i) {
         Token token = tokens[i];

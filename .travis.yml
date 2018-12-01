@@ -1,5 +1,5 @@
 language: cpp
-script: mkdir build && cd build && cmake .. && make && ./duskc ../examples/main.ds
+script: mkdir build && cd build && cmake .. && make && make test
 compiler:
   - clang
   - gcc

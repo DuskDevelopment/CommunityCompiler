@@ -17,7 +17,7 @@ ast_expression *parseExpression(Token *tokens, int *pos, int *endPos) {
     }
     result->integer = tokens[curPos].intLiteral;
     curPos++;
-    
+
     *pos = curPos;
     *endPos = curPos;
     return result;
@@ -35,7 +35,7 @@ ast_return *parseReturn(Token *tokens, int *pos, int *endPos) {
     if(!(value = parseExpression(tokens, &curPos, endPos))) {
         return NULL; // End pos has already been set, error has been printed
     }
-    
+
     *pos = curPos;
     *endPos = curPos;
     ast_return *result = malloc(sizeof(ast_return));
@@ -64,7 +64,7 @@ ast_statement *parseStatement(Token *tokens, int *pos, int *endPos) {
         return NULL;
     }
     curPos++;
-    
+
     *pos = curPos;
     *endPos = curPos;
     return result;
@@ -81,7 +81,7 @@ ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
         return NULL;
     }
     curPos++;
-    
+
     ast_statement *curStatement;
     while(true) {
         if(tokens[curPos].tokenType == TOKEN_CLOSE_BRACE) {
@@ -93,7 +93,7 @@ ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
         }
         sb_push(statements, curStatement);
     }
-    
+
     *pos = curPos;
     *endPos = curPos;
     ast_codeBlock *result = malloc(sizeof(ast_codeBlock));
@@ -194,6 +194,7 @@ ast_grammar *parseGrammar(Token *tokens, int *endPos) {
     {
         result->types = types;
         result->statements = statements;
+        result->origTokens = tokens;
     }
     return result;
 }
@@ -254,7 +255,58 @@ void printGrammar(ast_grammar *grammar, int numTabs) {
     printf("}");
 }
 
-void parse(Token *tokens) {
+void freeExpression(ast_expression *expression) {
+    switch(expression->type) {
+    case TYPE_INTEGER:
+        // Do nothing extra
+        break;
+    }
+    free(expression);
+}
+
+void freeReturn(ast_return *returnStatement) {
+    freeExpression(returnStatement->value);
+    free(returnStatement);
+}
+
+void freeStatement(ast_statement *statement) {
+    switch(statement->type) {
+    case TYPE_RETURN:
+        freeReturn(statement->returnStatement);
+        break;
+    }
+    free(statement);
+}
+
+void freeCodeBlock(ast_codeBlock *codeBlock) {
+    for(int i = 0; i < sb_count(codeBlock->statements); i++) {
+        freeStatement(codeBlock->statements[i]);
+    }
+    sb_free(codeBlock->statements);
+    if(codeBlock->hasFinalExpression) freeExpression(codeBlock->finalExpression);
+    free(codeBlock);
+}
+
+void freeFunction(ast_function *function) {
+    // Name will be free'd with tokens
+    sb_free(function->parameters); // Parameters will be free'd with tokens
+    // Return type will be free'd with tokens
+    freeCodeBlock(function->codeBlock);
+    free(function);
+}
+
+void freeGrammar(ast_grammar *grammar) {
+    for(int i = 0; i < sb_count(grammar->statements); i++) {
+        if(grammar->types[i]) freeFunction(grammar->statements[i].function);
+        else freeStatement(grammar->statements[i].statement);
+    }
+    sb_free(grammar->types);
+    sb_free(grammar->statements);
+    freeTokens(grammar->origTokens);
+    free(grammar);
+}
+
+ast_grammar *parse(Token *tokens) {
     int position = -1;
     ast_grammar *grammar = parseGrammar(tokens, &position);
     if(position != -1) fprintf(stderr, "at token id %i\n", position);
@@ -262,17 +314,6 @@ void parse(Token *tokens) {
         printGrammar(grammar, 0);
         printf("\n\n");
     }
-    
-    // Clean up tokens
-    for (int i = 0; i < sb_count(tokens); ++i) {
-        Token token = tokens[i];
-        int type = token.tokenType;
-        if (type == TOKEN_IDENTIFIER) {
-            free(token.identifier);
-        }
-    }
 
-    sb_free(tokens);
-    
-    if(position != -1) exit(1);
+    return grammar;
 }

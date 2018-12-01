@@ -2,6 +2,7 @@
 #define AST_H
 
 #include <stdbool.h>
+#include "lexer.h"
 
 typedef enum EXPRESSION_TYPES {
     TYPE_IDENTIFIER,
@@ -67,6 +68,7 @@ typedef struct ast_grammar {
         ast_function *function;
         ast_statement *statement;
     } *statements;
+    Token *origTokens;
 } ast_grammar;
 
 #endif

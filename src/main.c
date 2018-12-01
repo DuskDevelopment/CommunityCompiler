@@ -64,10 +64,10 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < sb_count(inputFiles); i++) {
         char *inputFile = inputFiles[i];
-        parse(lex(inputFile));
+        freeGrammar(parse(lex(inputFile)));
     }
 
-            sb_free(inputFiles);
+    sb_free(inputFiles);
 
     return 0;
 }

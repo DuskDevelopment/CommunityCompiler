@@ -3,6 +3,12 @@
 
 #include <stdbool.h>
 
+typedef enum EXPRESSION_TYPES {
+    TYPE_IDENTIFIER,
+    TYPE_INTEGER,
+    TYPE_REAL
+} EXPRESSION_TYPES;
+
 typedef struct ast_expression {
     int type;
     union {
@@ -23,6 +29,12 @@ typedef struct ast_vardecl {
 typedef struct ast_return {
     ast_expression *value;
 } ast_return;
+
+typedef enum STATEMENT_TYPES {
+    TYPE_EXPRESSION,
+    TYPE_VARDECL,
+    TYPE_RETURN
+} STATEMENT_TYPES;
 
 typedef struct ast_statement {
     int type;

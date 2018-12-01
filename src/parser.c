@@ -8,7 +8,7 @@
 // This function will be rewriteen when we need more types of expressions. For now, it only acknowledges integers.
 ast_expression *parseExpression(Token *tokens, int *pos, int *endPos) {
     ast_expression *result = malloc(sizeof(ast_expression));
-    result->type = 1; // integer
+    result->type = TYPE_INTEGER;
     int curPos = *pos;
     if(tokens[curPos].tokenType != TOKEN_INTEGER_LITERAL) {
         fprintf(stderr, "Expected integer literal ");
@@ -48,7 +48,7 @@ ast_return *parseReturn(Token *tokens, int *pos, int *endPos) {
 // This function will be rewritten when we need more statements. For now, it only acknowledges return.
 ast_statement *parseStatement(Token *tokens, int *pos, int *endPos) {
     ast_statement *result = malloc(sizeof(ast_statement));
-    result->type = 2; // return
+    result->type = TYPE_RETURN;
     int curPos = *pos;
     if(tokens[curPos].tokenType != TOKEN_IDENTIFIER || !stringCompare("return", tokens[curPos].identifier)) {
         fprintf(stderr, "Expected return statement ");
@@ -204,7 +204,7 @@ void printTabs(int numTabs) {
 void printExpression(ast_expression *expression, int numTabs) {
     printf("ast_expression {\n");
     switch(expression->type) {
-    case 1:
+    case TYPE_INTEGER:
         printTabs(numTabs);
         printf("  type = integer,\n");
         printTabs(numTabs);
@@ -217,7 +217,7 @@ void printExpression(ast_expression *expression, int numTabs) {
 void printStatement(ast_statement *statement, int numTabs) {
     printf("ast_statement {\n");
     switch(statement->type) {
-    case 2:
+    case TYPE_RETURN:
         printTabs(numTabs);
         printf("  type = return,\n");
         printTabs(numTabs);
@@ -231,7 +231,6 @@ void printStatement(ast_statement *statement, int numTabs) {
 }
 
 void printFunction(ast_function *function, int numTabs) {
-    printTabs(numTabs);
     printf("ast_function");
 }
 

@@ -258,9 +258,10 @@ void parse(Token *tokens) {
     int position = -1;
     ast_grammar *grammar = parseGrammar(tokens, &position);
     if(position != -1) fprintf(stderr, "at token id %i\n", position);
-    
-    printGrammar(grammar, 0);
-    printf("\n\n");
+    else {
+        printGrammar(grammar, 0);
+        printf("\n\n");
+    }
     
     // Clean up tokens
     for (int i = 0; i < sb_count(tokens); ++i) {
@@ -272,4 +273,6 @@ void parse(Token *tokens) {
     }
 
     sb_free(tokens);
+    
+    if(position != -1) exit(1);
 }

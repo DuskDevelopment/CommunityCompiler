@@ -1,9 +1,14 @@
+#include <stdbool.h>
 #include <stdio.h>
 
 #include "ast.h"
 #include "parser.h"
 #include "stretchy_buffers.h"
 #include "string.h"
+
+bool isKeyword(const char *restrict keyword, Token token) {
+    return token.tokenType == TOKEN_IDENTIFIER && stringCompare(keyword, token.identifier);
+}
 
 // This function will be rewriteen when we need more types of expressions. For now, it only acknowledges integers.
 ast_expression *parseExpression(Token *tokens, int *pos, int *endPos) {
@@ -26,7 +31,7 @@ ast_expression *parseExpression(Token *tokens, int *pos, int *endPos) {
 ast_return *parseReturn(Token *tokens, int *pos, int *endPos) {
     ast_expression *value;
     int curPos = *pos;
-    if(tokens[curPos].tokenType != TOKEN_IDENTIFIER || !stringCompare("return", tokens[curPos].identifier)) {
+    if(!isKeyword("return", tokens[curPos])) {
         fprintf(stderr, "Expected return statement ");
         if(endPos) *endPos = curPos;
         return NULL;
@@ -50,7 +55,7 @@ ast_statement *parseStatement(Token *tokens, int *pos, int *endPos) {
     ast_statement *result = malloc(sizeof(ast_statement));
     result->type = TYPE_RETURN;
     int curPos = *pos;
-    if(tokens[curPos].tokenType != TOKEN_IDENTIFIER || !stringCompare("return", tokens[curPos].identifier)) {
+    if(!isKeyword("return", tokens[curPos])) {
         fprintf(stderr, "Expected return statement ");
         if(endPos) *endPos = curPos;
         return NULL;
@@ -114,7 +119,7 @@ ast_function *parseFunction(Token *tokens, int *pos, int *endPos) {
     char *returnType = NULL; // Token for return type doesn't exists; can't detect
     ast_codeBlock *codeBlock;
     int curPos = *pos;
-    if(tokens[curPos].tokenType != TOKEN_IDENTIFIER || !stringCompare("fn", tokens[curPos].identifier)) { // Not a function if it doesn't begin with `fn`
+    if(!isKeyword("fn", tokens[curPos])) { // Not a function if it doesn't begin with `fn`
         fprintf(stderr, "Expected function ");
         if(endPos) *endPos = curPos;
         return NULL;

@@ -100,7 +100,7 @@ ast_codeBlock *parseCodeBlock(Token *tokens, int *pos, int *endPos) {
         if(!(curStatement = parseStatement(tokens, &curPos, endPos))) {
             return NULL; // End pos has already been set, error has been printed
         }
-        sb_push(statements, curStatement);
+        (sb_push(statements, curStatement));
     }
 
     *pos = curPos;
@@ -174,14 +174,14 @@ ast_grammar *parseGrammar(Token *tokens, int *endPos) {
         ast_function *function;
         ast_statement *statement;
     } *statements = NULL; // stretchy buffer
-    for(;curPos < sb_count(tokens);) {
+    for(;curPos < (sb_count(tokens));) {
         int failPos;
         if(tokens[curPos].tokenType == TOKEN_IDENTIFIER && stringCompare("fn", tokens[curPos].identifier)) {
             ast_function *function = parseFunction(tokens, &curPos, &failPos);
             if(function) {
-                sb_push(types, 1);
-                sb_add(statements, 1);
-                statements[sb_count(statements)-1].function = function;
+                (sb_push(types, 1));
+                (sb_add(statements, 1));
+                statements[(sb_count(statements))-1].function = function;
                 continue;
             } else {
                 *endPos = failPos;
@@ -190,9 +190,9 @@ ast_grammar *parseGrammar(Token *tokens, int *endPos) {
         }
         ast_statement *statement = parseStatement(tokens, &curPos, &failPos);
         if(statement) {
-            sb_push(types, 0);
-            sb_add(statements, 1);
-            statements[sb_count(statements)-1].statement = statement;
+            (sb_push(types, 0));
+            (sb_add(statements, 1));
+            statements[(sb_count(statements))-1].statement = statement;
             continue;
         } else {
             *endPos = failPos;
@@ -249,11 +249,11 @@ void printGrammar(ast_grammar *grammar, int numTabs) {
     printf("ast_grammar {\n");
     printTabs(numTabs);
     printf("  statements = [\n");
-    for(int i = 0; i < sb_count(grammar->statements); i++) {
+    for(int i = 0; i < (sb_count(grammar->statements)); i++) {
         printTabs(numTabs+2);
         if(grammar->types[i]) printFunction(grammar->statements[i].function, numTabs+2);
         else printStatement(grammar->statements[i].statement, numTabs+2);
-        if(i < sb_count(grammar->statements)-1) printf(",\n");
+        if(i < (sb_count(grammar->statements)-1)) printf(",\n");
         else {
             printf("\n");
             printTabs(numTabs);
@@ -288,29 +288,29 @@ void freeStatement(ast_statement *statement) {
 }
 
 void freeCodeBlock(ast_codeBlock *codeBlock) {
-    for(int i = 0; i < sb_count(codeBlock->statements); i++) {
+    for(int i = 0; i < (sb_count(codeBlock->statements)); i++) {
         freeStatement(codeBlock->statements[i]);
     }
-    sb_free(codeBlock->statements);
+    (sb_free(codeBlock->statements));
     if(codeBlock->hasFinalExpression) freeExpression(codeBlock->finalExpression);
     free(codeBlock);
 }
 
 void freeFunction(ast_function *function) {
     // Name will be free'd with tokens
-    sb_free(function->parameters); // Parameters will be free'd with tokens
+    (sb_free(function->parameters)); // Parameters will be free'd with tokens
     // Return type will be free'd with tokens
     freeCodeBlock(function->codeBlock);
     free(function);
 }
 
 void freeGrammar(ast_grammar *grammar) {
-    for(int i = 0; i < sb_count(grammar->statements); i++) {
+    for(int i = 0; i < (sb_count(grammar->statements)); i++) {
         if(grammar->types[i]) freeFunction(grammar->statements[i].function);
         else freeStatement(grammar->statements[i].statement);
     }
-    sb_free(grammar->types);
-    sb_free(grammar->statements);
+    (sb_free(grammar->types));
+    (sb_free(grammar->statements));
     freeTokens(grammar->origTokens);
     free(grammar);
 }

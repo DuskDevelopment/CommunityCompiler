@@ -1,15 +1,33 @@
-language: cpp
+language: c
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - cmake
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-xenial-6.0
+          packages:
+            - cmake
+            - clang-6.0
+      env:
+        - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+    - os: osx
+      osx_image: xcode8
+      env:
+        - MATRIX_EVAL=""
+before_script:
+  - eval "${MATRIX_EVAL}"
 script: mkdir build && cd build && cmake .. && make && ./duskc ../examples/main.ds
-compiler:
-  - clang
-  - gcc
-os:
-  - linux
-  - osx
-addons:
-  apt:
-    sources:
-      - george-edison55-precise-backports
-    packages:
-      - cmake-data
-      - cmake

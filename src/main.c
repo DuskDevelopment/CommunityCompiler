@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     }
 
     char **inputFiles = NULL;
-    char *outputFileName = "a.out";
+    //char *outputFileName = "a.out";
 
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] == '-') {
@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
                 if (i == argc - 1) {
                     printf("No output file specified with the -o flag. Ignoring\n");
                 } else {
-                    outputFileName = argv[++i];
+                    //outputFileName = argv[++i];
                 }
             } else {
                 printf("Invalid option specified. Ignoring.\n");

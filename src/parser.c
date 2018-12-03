@@ -1,6 +1,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#ifdef _WIN32
+#define restrict
+#endif
+
 #include "ast.h"
 #include "parser.h"
 #include "stretchy_buffers.h"

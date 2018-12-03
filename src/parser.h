@@ -4,6 +4,10 @@
 #include "ast.h"
 #include "lexer.h"
 
-void parse(Token *tokens);
+ast_grammar *parse(Token *tokens);
+
+void printGrammar(ast_grammar *grammar, int numTabs);
+
+void freeGrammar(ast_grammar *grammar);
 
 #endif

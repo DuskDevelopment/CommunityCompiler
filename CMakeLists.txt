@@ -8,8 +8,12 @@ file(GLOB_RECURSE SOURCE ${PROJECT_SOURCE_DIR}/src/*.c)
 
 add_executable(duskc ${HEADERS} ${SOURCE})
 
+ENABLE_TESTING()
+
+add_test(NAME singleNumber COMMAND duskc -o test/singleNumber ${PROJECT_SOURCE_DIR}/test/singleNumber.ds)
+
 if (MSVC)
-    target_compile_options(duskc PRIVATE /W4 /Wall /WX)
+    target_compile_options(duskc PRIVATE /W4 /Wall)
 else(MSVC)
-    target_compile_options(duskc PRIVATE -Wall -Wextra -pedantic -Werror -Wno-missing-field-initializers)
+    target_compile_options(duskc PRIVATE -Wall -Wextra -Wno-missing-field-initializers)
 endif (MSVC)

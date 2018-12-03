@@ -48,6 +48,7 @@ static Token *lexSource(char *inputBuffer) {
                 literal[length] = '\0';
 
                 long value = strtol(literal, NULL, 10);
+                free(literal);
 
                 token.tokenType = TOKEN_INTEGER_LITERAL;
                 token.intLiteral = value;
@@ -157,7 +158,6 @@ static Token *lexSource(char *inputBuffer) {
                 break;
             }
             default: {
-
                 break;
             }
         }
@@ -176,6 +176,19 @@ static Token *lexSource(char *inputBuffer) {
     }
 
     return tokens;
+}
+
+void freeTokens(Token *tokens) {
+    for(int i = 0; i < sb_count(tokens); i++) {
+        switch(tokens[i].tokenType) {
+        case TOKEN_IDENTIFIER:
+            free(tokens[i].identifier);
+            break;
+        default:
+            break;
+        }
+    }
+    sb_free(tokens);
 }
 
 Token *lex(char *fileName) {

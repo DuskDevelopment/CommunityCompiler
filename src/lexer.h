@@ -24,4 +24,6 @@ typedef struct Token {
 
 Token *lex(char *fileName);
 
+void freeTokens(Token *tokens);
+
 #endif

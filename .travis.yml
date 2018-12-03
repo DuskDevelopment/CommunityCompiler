@@ -30,4 +30,4 @@ matrix:
         - MATRIX_EVAL=""
 before_script:
   - eval "${MATRIX_EVAL}"
-script: mkdir build && cd build && cmake .. && make && ./duskc ../examples/main.ds
+script: mkdir build && cd build && cmake .. && make && make test

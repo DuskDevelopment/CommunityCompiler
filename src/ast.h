@@ -1,9 +1,22 @@
+#ifndef AST_H
+#define AST_H
+
+#include <stdbool.h>
+#include "lexer.h"
+
+typedef enum EXPRESSION_TYPES {
+    TYPE_IDENTIFIER,
+    TYPE_INTEGER,
+    TYPE_REAL
+} EXPRESSION_TYPES;
+
 typedef struct ast_expression {
+    int type;
     union {
         char *identifier;
-        int *number;
-        double *floatingNumber;
-    } content;
+        int integer;
+        double real;
+    };
 } ast_expression;
 
 typedef struct ast_vardecl {
@@ -15,20 +28,28 @@ typedef struct ast_vardecl {
 } ast_vardecl;
 
 typedef struct ast_return {
-    ast_expression value;
+    ast_expression *value;
 } ast_return;
 
+typedef enum STATEMENT_TYPES {
+    TYPE_EXPRESSION,
+    TYPE_VARDECL,
+    TYPE_RETURN
+} STATEMENT_TYPES;
+
 typedef struct ast_statement {
+    int type;
     union {
-        ast_expression expression;
-        ast_vardecl vardecl;
-    } content;
+        ast_expression *expression;
+        ast_vardecl *vardecl;
+        ast_return *returnStatement;
+    };
 } ast_statement;
 
 typedef struct ast_codeBlock {
-    ast_statement *statements;
+    ast_statement **statements;
     bool hasFinalExpression;
-    ast_expression finalExpression;
+    ast_expression *finalExpression;
 } ast_codeBlock;
 
 typedef struct ast_function {
@@ -38,12 +59,16 @@ typedef struct ast_function {
         char *type;
     } *parameters;
     char *returnType;
-    ast_codeBlock codeBlock;
+    ast_codeBlock *codeBlock;
 } ast_function;
 
 typedef struct ast_grammar {
+    int *types;
     union {
-        ast_function function;
-        ast_statement statement;
+        ast_function *function;
+        ast_statement *statement;
     } *statements;
+    Token *origTokens;
 } ast_grammar;
+
+#endif

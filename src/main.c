@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "parser.h"
 #include "stretchy_buffers.h"
 #include "string.h"
 
@@ -35,10 +36,13 @@ int main(int argc, char **argv) {
         if (argv[i][0] == '-') {
             if (stringCompare(argv[i], "--help")) {
                 print_help();
+                return 0;
             } else if (stringCompare(argv[i], "--version")) {
                 print_version();
-            } else if (stringCompare(argv[i], "--dumpversion")) {
-                print_version();
+                return 0;
+            } else if (stringCompare(argv[i], "-dumpversion")) {
+                printf("1\n");
+                return 0;
             } else if (stringCompare(argv[i], "-o")) {
                 if (i == argc - 1) {
                     printf("No output file specified with the -o flag. Ignoring\n");
@@ -60,8 +64,10 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < sb_count(inputFiles); i++) {
         char *inputFile = inputFiles[i];
-        lex(inputFile);
+        freeGrammar(parse(lex(inputFile)));
     }
+
+    sb_free(inputFiles);
 
     return 0;
 }

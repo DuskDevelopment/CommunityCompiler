@@ -27,7 +27,7 @@ matrix:
     - os: osx
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="brew install llvm"
+        - MATRIX_EVAL="HOMEBREW_NO_AUTO_UPDATE=1 brew install llvm"
 before_script:
   - eval "${MATRIX_EVAL}"
 script: mkdir build && cd build && cmake .. && make && make test

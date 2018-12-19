@@ -1,3 +1,4 @@
+#include "codegen.h"
 #include "lexer.h"
 #include "parser.h"
 #include "stretchy_buffers.h"
@@ -64,7 +65,7 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < sb_count(inputFiles); i++) {
         char *inputFile = inputFiles[i];
-        freeGrammar(parse(lex(inputFile)));
+        codegen(parse(lex(inputFile)), outputFileName);
     }
 
     sb_free(inputFiles);

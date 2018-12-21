@@ -14,7 +14,6 @@ print_help(void) {
     printf("  --help        Display this information.\n");
     printf("  --version     Display compiler version information.\n");
     printf("  -dumpversion  Display the version of the compiler.\n");
-    printf("  -o <file>     Place the output into <file>.\n");
 }
 
 static void
@@ -31,8 +30,6 @@ int main(int argc, char **argv) {
     }
 
     char **inputFiles = NULL;
-    char *outputFileName = "a.out";
-
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] == '-') {
             if (stringCompare(argv[i], "--help")) {
@@ -44,12 +41,6 @@ int main(int argc, char **argv) {
             } else if (stringCompare(argv[i], "-dumpversion")) {
                 printf("1\n");
                 return 0;
-            } else if (stringCompare(argv[i], "-o")) {
-                if (i == argc - 1) {
-                    printf("No output file specified with the -o flag. Ignoring\n");
-                } else {
-                    outputFileName = argv[++i];
-                }
             } else {
                 printf("Invalid option specified. Ignoring.\n");
             }
@@ -65,7 +56,7 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < sb_count(inputFiles); i++) {
         char *inputFile = inputFiles[i];
-        codegen(parse(lex(inputFile)), outputFileName);
+        codegen(parse(lex(inputFile)));
     }
 
     sb_free(inputFiles);

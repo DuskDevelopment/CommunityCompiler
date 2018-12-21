@@ -23,7 +23,7 @@ target_link_libraries(duskc ${LLVM_LIBS})
 
 ENABLE_TESTING()
 
-add_test(NAME singleNumber COMMAND duskc -o test/singleNumber ${PROJECT_SOURCE_DIR}/test/singleNumber.ds)
+add_test(NAME singleNumber COMMAND duskc ${PROJECT_SOURCE_DIR}/test/singleNumber.ds)
 
 if (MSVC)
     target_compile_options(duskc PRIVATE /W4 /Wall)

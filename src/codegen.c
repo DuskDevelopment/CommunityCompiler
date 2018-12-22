@@ -38,6 +38,8 @@ void codegen(ast_grammar *grammar) {
     LLVMBuilderRef builder = LLVMCreateBuilder();
     LLVMExecutionEngineRef engine;
     LLVMInitializeNativeTarget();
+    LLVMInitializeNativeAsmPrinter();
+    LLVMInitializeNativeAsmParser();
     LLVMLinkInMCJIT();
 
     LLVMTypeRef *mainParams = malloc(sizeof(LLVMTypeRef) * 2);
@@ -61,6 +63,17 @@ void codegen(ast_grammar *grammar) {
     if(LLVMVerifyFunction(main, LLVMPrintMessageAction) == 1) {
         fprintf(stderr, "Invalid main function");
         LLVMDeleteFunction(main);
+    } else {
+        char *msg;
+        if(LLVMCreateExecutionEngineForModule(&engine, module, &msg) == 1) {
+            fprintf(stderr, "%s\n", msg);
+            LLVMDisposeMessage(msg);
+            return 1;
+        }
+        char **params = malloc(sizeof(char*));
+        params[0] = "duskc";
+        int ret = LLVMRunFunctionAsMain(engine, main, 1, params, NULL);
+        printf("Returned: %i\n", ret);
     }
 
     LLVMDumpModule(module);

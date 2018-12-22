@@ -27,11 +27,11 @@ matrix:
     - os: osx
       osx_image: xcode10.1 # as this is newer
       # Maybe this would be better!
-      #addons:
-      # homebrew:
-      # packages:
-      # - llvm
-      # update: true
+      addons:
+        homebrew:
+          packages:
+            - llvm
+            update: true
       env:
         - MATRIX_EVAL="HOMEBREW_NO_AUTO_UPDATE=1 brew update && brew upgrade && brew install llvm && export LLVM_DIR=/usr/local/Cellar/llvm/3.9.0/lib/cmake"
 before_script:

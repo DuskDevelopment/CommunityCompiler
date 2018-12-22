@@ -68,7 +68,6 @@ void codegen(ast_grammar *grammar) {
         if(LLVMCreateExecutionEngineForModule(&engine, module, &msg) == 1) {
             fprintf(stderr, "%s\n", msg);
             LLVMDisposeMessage(msg);
-            return 1;
         }
         char **params = malloc(sizeof(char*));
         params[0] = "duskc";

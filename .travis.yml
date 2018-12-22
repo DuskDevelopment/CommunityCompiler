@@ -31,7 +31,6 @@ matrix:
         homebrew:
           packages:
             - llvm
-            update: true
       env:
         - MATRIX_EVAL="export LDFLAGS="-L/usr/local/opt/llvm/lib" && export CPPFLAGS="-I/usr/local/opt/llvm/include" && export LLVM_DIR=/usr/local/Cellar/llvm/7.0.0_1/lib/cmake"
 before_script:

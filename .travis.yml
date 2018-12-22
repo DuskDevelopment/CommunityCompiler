@@ -31,7 +31,7 @@ matrix:
           packages:
             - llvm
       env:
-        - MATRIX_EVAL="LDFLAGS="-L/usr/local/opt/llvm/lib" CPPFLAGS="-I/usr/local/opt/llvm/include" && LLVM_DIR=/usr/local/Cellar/llvm/7.0.0/lib/cmake/llvm && ls -R /usr/local/Cellar/llvm/7.0.0/lib/cmake/; ls /usr/local/Cellar/llvm/"
+        - MATRIX_EVAL="LDFLAGS="-L/usr/local/opt/llvm/lib" CPPFLAGS="-I/usr/local/opt/llvm/include" && LLVM_DIR=/usr/local/Cellar/llvm/7.0.0/lib/cmake/llvm"
 before_script:
   - eval "${MATRIX_EVAL}"
 script: mkdir build && cd build && cmake .. && make && make test

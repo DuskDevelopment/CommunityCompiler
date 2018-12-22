@@ -40,8 +40,10 @@ void codegen(ast_grammar *grammar) {
     LLVMInitializeNativeTarget();
     LLVMLinkInMCJIT();
 
-    LLVMTypeRef *mainParams = malloc(0); // I mean, I may be able to pass NULL, but I'm not sure...
-    LLVMTypeRef mainType = LLVMFunctionType(LLVMIntType(32), mainParams, 0, 0);
+    LLVMTypeRef *mainParams = malloc(sizeof(LLVMTypeRef) * 2);
+    mainParams[0] = LLVMIntType(32);
+    mainParams[1] = LLVMPointerType(LLVMPointerType(LLVMIntType(8), 0), 0);
+    LLVMTypeRef mainType = LLVMFunctionType(LLVMIntType(32), mainParams, 2, 0);
     LLVMValueRef main = LLVMAddFunction(module, "main", mainType);
     LLVMSetLinkage(main, LLVMExternalLinkage);
 
@@ -60,6 +62,7 @@ void codegen(ast_grammar *grammar) {
         fprintf(stderr, "Invalid main function");
         LLVMDeleteFunction(main);
     }
+
     LLVMDumpModule(module);
     LLVMDisposeBuilder(builder);
     LLVMDisposeModule(module);

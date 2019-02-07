@@ -1,4 +1,4 @@
-#include "codegen.h"
+#include "interpret.h"
 #include "lexer.h"
 #include "parser.h"
 #include "stretchy_buffers.h"
@@ -54,12 +54,15 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    int maxReturnValue = 0;
+
     for (int i = 0; i < sb_count(inputFiles); i++) {
         char *inputFile = inputFiles[i];
-        codegen(parse(lex(inputFile)));
+        int curReturn = interpret(parse(lex(inputFile)));
+        if(curReturn > maxReturnValue) maxReturnValue = curReturn;
     }
 
     sb_free(inputFiles);
 
-    return 0;
+    return maxReturnValue;
 }

@@ -7,13 +7,15 @@
 #include "stretchy_buffers.h"
 
 typedef enum INTERPRETER_TYPE {
-    INTEGER
+    INTEGER,
+    DOUBLE
 } INTERPRETER_TYPE;
 
 typedef struct interpreter_value {
     INTERPRETER_TYPE type;
     union {
         int integer;
+        double doubleVal;
     };
 } interpreter_value;
 
@@ -29,6 +31,12 @@ interpreter_value *interpretExpression(interpreter_state *state, ast_expression 
             interpreter_value *result = malloc(sizeof(interpreter_value));
             result->type = INTEGER;
             result->integer = expression->integer;
+            return result;
+        }
+        case TYPE_REAL: {
+            interpreter_value *result = malloc(sizeof(interpreter_value));
+            result->type = DOUBLE;
+            result->doubleVal = expression->real;
             return result;
         }
         default:

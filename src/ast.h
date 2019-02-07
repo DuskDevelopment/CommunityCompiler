@@ -4,14 +4,14 @@
 #include <stdbool.h>
 #include "lexer.h"
 
-typedef enum EXPRESSION_TYPES {
+typedef enum EXPRESSION_TYPE {
     TYPE_IDENTIFIER,
     TYPE_INTEGER,
     TYPE_REAL
-} EXPRESSION_TYPES;
+} EXPRESSION_TYPE;
 
 typedef struct ast_expression {
-    int type;
+    EXPRESSION_TYPE type;
     union {
         char *identifier;
         int integer;
@@ -31,14 +31,14 @@ typedef struct ast_return {
     ast_expression *value;
 } ast_return;
 
-typedef enum STATEMENT_TYPES {
+typedef enum STATEMENT_TYPE {
     TYPE_EXPRESSION,
     TYPE_VARDECL,
     TYPE_RETURN
-} STATEMENT_TYPES;
+} STATEMENT_TYPE;
 
 typedef struct ast_statement {
-    int type;
+    STATEMENT_TYPE type;
     union {
         ast_expression *expression;
         ast_vardecl *vardecl;

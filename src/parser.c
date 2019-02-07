@@ -11,7 +11,7 @@
 #include "string.h"
 
 bool isKeyword(const char *restrict keyword, Token token) {
-    return token.tokenType == TOKEN_IDENTIFIER && stringCompare(keyword, token.identifier);
+    return token.tokenType == TOKEN_IDENTIFIER && stringCompare((char*) keyword, token.identifier);
 }
 
 // This function will be rewriteen when we need more types of expressions. For now, it only acknowledges integers.

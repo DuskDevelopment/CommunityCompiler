@@ -26,12 +26,6 @@ matrix:
         - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
     - os: osx
       osx_image: xcode10.1
-      addons:
-        homebrew:
-          packages:
-            - llvm
-      env:
-        - MATRIX_EVAL="LDFLAGS="-L/usr/local/opt/llvm/lib" CPPFLAGS="-I/usr/local/opt/llvm/include" && LLVM_DIR=/usr/local/Cellar/llvm/7.0.0/lib/cmake/llvm"
 before_script:
   - eval "${MATRIX_EVAL}"
 script: mkdir build && cd build && cmake .. && make && make test
